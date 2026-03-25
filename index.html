@@ -421,6 +421,7 @@ input[type=file]{display:none;}
         <div class="prof-hero" id="prof-hero"></div>
         <div class="metrics-grid" id="metrics-grid"></div>
         <button class="upd-btn2" onclick="openM()">📏 Update Measurements</button>
+        <button class="upd-btn2" onclick="openGD()" style="color:var(--acc);border-color:var(--acc)40;">🎯 Change Goal &amp; Diet Preference</button>
         <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px">Goal Targets Progress</div>
         <div id="prof-targets"></div>
         <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin:16px 0 10px">Last 30 Days</div>
@@ -479,6 +480,20 @@ input[type=file]{display:none;}
   <button class="ms" id="msave" onclick="saveM()">SAVE</button>
   <button class="mc-x" onclick="closeM()">Cancel</button>
 </div></div>
+
+<!-- GOAL & DIET MODAL -->
+<div id="gdModal" style="position:fixed;inset:0;background:rgba(7,7,15,.97);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--bg2);border:1px solid var(--bdr2);border-radius:var(--r);padding:24px;width:100%;max-width:380px;margin-top:40px;">
+    <div style="font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:1px;margin-bottom:6px;">Change Goal &amp; Diet</div>
+    <div style="font-size:13px;color:var(--txt3);margin-bottom:18px;">You can change these anytime</div>
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px;">Your Goal</div>
+    <div class="goal-grid" style="margin-bottom:20px;" id="gd-goals"></div>
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px;">Diet Preference</div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;" id="gd-diet"></div>
+    <button id="gd-save" onclick="saveGD()" style="width:100%;padding:15px;border:none;border-radius:12px;font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:2px;cursor:pointer;background:var(--acc);color:#fff;min-height:56px;">SAVE CHANGES</button>
+    <button onclick="closeGD()" style="width:100%;padding:12px;border:none;background:transparent;color:var(--txt3);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;">Cancel</button>
+  </div>
+</div>
 
 <script>
 /* ═══════════════════════════════════════════════════
@@ -564,73 +579,148 @@ var WO_TEMPLATES = {
 ═══════════════════════════════════════════════════ */
 var FOODS = {
   lose:{
-    breakfast:[
-      {ic:"🥚",n:"Boiled Eggs (3)",d:"High protein, low calorie start",cal:210,p:"18g protein"},
-      {ic:"🍌",n:"Banana (1 medium)",d:"Natural energy, potassium",cal:90,p:"+ 1 banana"},
-      {ic:"🥛",n:"Skimmed Milk (200ml)",d:"Calcium + protein",cal:70,p:"or black tea"},
-    ],
-    lunch:[
-      {ic:"🍗",n:"Grilled Chicken (150g)",d:"Lean protein, zero fat",cal:248,p:"37g protein"},
-      {ic:"🥗",n:"Mixed Salad",d:"Cucumber, tomato, onion, lemon",cal:50,p:"unlimited greens"},
-      {ic:"🍚",n:"Brown Rice (1 cup cooked)",d:"Complex carbs, fiber",cal:220,p:"or 2 chapati"},
-      {ic:"🫘",n:"Dal / Lentils (1 bowl)",d:"Plant protein + fiber",cal:150,p:"moong or masoor"},
-    ],
-    snack:[
-      {ic:"🥜",n:"Almonds (15-20)",d:"Healthy fats, keeps you full",cal:120,p:"handful only"},
-      {ic:"🍊",n:"Orange or Apple",d:"Vitamin C, fiber, low cal",cal:60,p:"1 medium fruit"},
-    ],
-    dinner:[
-      {ic:"🐟",n:"Fish / Paneer (100g)",d:"Lean protein for muscle recovery",cal:180,p:"or 100g paneer"},
-      {ic:"🥦",n:"Stir-fried Veggies",d:"Broccoli, capsicum, beans",cal:80,p:"2 cups, any veg"},
-      {ic:"🫓",n:"1-2 Chapati (whole wheat)",d:"Light dinner = better fat loss",cal:140,p:"avoid rice at night"},
-    ],
-    avoid:["❌ Maida / White bread / Biscuits","❌ Fried foods — samosa, pakora, puri","❌ Cold drinks, juices with sugar","❌ White rice at dinner","❌ Alcohol","❌ Sweets — mithai, chocolate, ice cream","❌ Chips and namkeen","❌ Heavy dal makhani, butter naan at night"]
+    nonveg:{
+      breakfast:[
+        {ic:"🥚",n:"Boiled Eggs (3)",d:"High protein, low calorie start",cal:210,p:"18g protein"},
+        {ic:"🍌",n:"Banana (1 medium)",d:"Natural energy, potassium",cal:90,p:"+ 1 banana"},
+        {ic:"🥛",n:"Skimmed Milk (200ml)",d:"Calcium + protein",cal:70,p:"or black tea"},
+      ],
+      lunch:[
+        {ic:"🍗",n:"Grilled Chicken (150g)",d:"Lean protein, zero fat",cal:248,p:"37g protein"},
+        {ic:"🥗",n:"Mixed Salad",d:"Cucumber, tomato, onion, lemon",cal:50,p:"unlimited greens"},
+        {ic:"🍚",n:"Brown Rice (1 cup)",d:"Complex carbs, fiber",cal:220,p:"or 2 chapati"},
+        {ic:"🫘",n:"Dal / Lentils (1 bowl)",d:"Plant protein + fiber",cal:150,p:"moong or masoor"},
+      ],
+      snack:[
+        {ic:"🥜",n:"Almonds (15-20)",d:"Healthy fats, keeps you full",cal:120,p:"handful only"},
+        {ic:"🍊",n:"Orange or Apple",d:"Vitamin C, fiber, low cal",cal:60,p:"1 medium fruit"},
+      ],
+      dinner:[
+        {ic:"🐟",n:"Fish (150g) grilled",d:"Lean protein for muscle recovery",cal:180,p:"best dinner protein"},
+        {ic:"🥦",n:"Stir-fried Veggies",d:"Broccoli, capsicum, beans",cal:80,p:"2 cups, any veg"},
+        {ic:"🫓",n:"1-2 Chapati (whole wheat)",d:"Light dinner = better fat loss",cal:140,p:"avoid rice at night"},
+      ],
+      avoid:["❌ Maida / White bread / Biscuits","❌ Fried foods — samosa, pakora, puri","❌ Cold drinks, juices with sugar","❌ White rice at dinner","❌ Alcohol","❌ Sweets — mithai, chocolate, ice cream","❌ Chips and namkeen","❌ Butter naan, heavy biryani at night"]
+    },
+    veg:{
+      breakfast:[
+        {ic:"🥛",n:"Curd + Oats (1 bowl)",d:"Probiotics + slow carbs",cal:180,p:"10g protein"},
+        {ic:"🍌",n:"Banana (1) + handful nuts",d:"Energy + healthy fats",cal:170,p:"+ almonds"},
+        {ic:"🫓",n:"Besan Chilla (2)",d:"High protein veg breakfast",cal:160,p:"12g protein"},
+      ],
+      lunch:[
+        {ic:"🧀",n:"Paneer (100g) sabzi",d:"Best veg protein source",cal:265,p:"18g protein"},
+        {ic:"🫘",n:"Rajma or Chole (1 bowl)",d:"Plant protein + fiber",cal:220,p:"15g protein"},
+        {ic:"🥗",n:"Salad + Raita",d:"Fiber + probiotics",cal:80,p:"every lunch"},
+        {ic:"🍚",n:"Brown Rice (1 cup) or 2 chapati",d:"Complex carbs",cal:220,p:"controlled portion"},
+      ],
+      snack:[
+        {ic:"🥜",n:"Peanuts / Chana (handful)",d:"Protein + fiber snack",cal:130,p:"8g protein"},
+        {ic:"🍎",n:"Apple or Pear",d:"Low cal, high fiber",cal:65,p:"1 medium"},
+      ],
+      dinner:[
+        {ic:"🧀",n:"Paneer or Tofu (100g)",d:"Protein before sleep",cal:180,p:"16g protein"},
+        {ic:"🥦",n:"Sabzi (2 types)",d:"Vitamins + minerals",cal:80,p:"any vegetables"},
+        {ic:"🫓",n:"1-2 Chapati",d:"Light on carbs at dinner",cal:140,p:"whole wheat only"},
+      ],
+      avoid:["❌ Maida / White bread / Biscuits","❌ Fried snacks — samosa, pakora","❌ Cold drinks, packaged juices","❌ Paneer in heavy cream gravy","❌ Too much ghee / butter","❌ Late night heavy meals","❌ Sweets, mithai, chocolate","❌ White rice at dinner"]
+    }
   },
   gain:{
-    breakfast:[
-      {ic:"🥚",n:"Eggs (4-5 whole)",d:"Protein + healthy fats to grow",cal:350,p:"25g protein"},
-      {ic:"🍌",n:"Banana (2)",d:"Energy + potassium pre-workout",cal:180,p:"or mango"},
-      {ic:"🥛",n:"Full-fat Milk (300ml)",d:"Calories + calcium + protein",cal:180,p:"or banana shake"},
-      {ic:"🫓",n:"Paratha (2) with ghee",d:"Calorie-dense healthy fats",cal:280,p:"or poha with nuts"},
-    ],
-    lunch:[
-      {ic:"🍗",n:"Chicken / Mutton (200g)",d:"Heavy protein for muscle building",cal:400,p:"48g protein"},
-      {ic:"🍚",n:"Rice (2 cups cooked)",d:"Carbs = energy = muscle fuel",cal:440,p:"or 4 chapati"},
-      {ic:"🫘",n:"Dal + Rajma combined",d:"Max plant protein",cal:250,p:"2 bowls"},
-      {ic:"🧀",n:"Paneer (100g) with meal",d:"Cottage cheese = muscle builder",cal:265,p:"18g protein"},
-    ],
-    snack:[
-      {ic:"🥜",n:"Peanut Butter (2 tbsp) + Roti",d:"Calorie-dense, healthy fats",cal:230,p:"8g protein"},
-      {ic:"🍌",n:"Banana Protein Shake",d:"Milk + banana + peanut butter",cal:380,p:"20g protein"},
-    ],
-    dinner:[
-      {ic:"🐟",n:"Fish / Chicken (150g)",d:"Protein before sleep = muscle growth",cal:280,p:"35g protein"},
-      {ic:"🍚",n:"Rice (1.5 cups) or 3 Chapati",d:"Moderate carbs at dinner",cal:330,p:"+ sabzi"},
-      {ic:"🥛",n:"Milk before bed (250ml)",d:"Casein protein = overnight growth",cal:150,p:"warm preferred"},
-    ],
-    avoid:["❌ Skip meals — never miss food","❌ Only cardio without lifting","❌ Too much junk food calories","❌ Coffee on empty stomach","❌ Very spicy food before workout","❌ Alcohol — kills testosterone"]
+    nonveg:{
+      breakfast:[
+        {ic:"🥚",n:"Eggs (4-5 whole)",d:"Protein + healthy fats to grow",cal:350,p:"25g protein"},
+        {ic:"🍌",n:"Banana (2)",d:"Energy + potassium pre-workout",cal:180,p:"or mango"},
+        {ic:"🥛",n:"Full-fat Milk (300ml)",d:"Calories + calcium + protein",cal:180,p:"or banana shake"},
+        {ic:"🫓",n:"Paratha (2) with ghee",d:"Calorie-dense healthy fats",cal:280,p:"or poha with nuts"},
+      ],
+      lunch:[
+        {ic:"🍗",n:"Chicken / Mutton (200g)",d:"Heavy protein for muscle building",cal:400,p:"48g protein"},
+        {ic:"🍚",n:"Rice (2 cups cooked)",d:"Carbs = energy = muscle fuel",cal:440,p:"or 4 chapati"},
+        {ic:"🫘",n:"Dal + Rajma combined",d:"Max plant protein",cal:250,p:"2 bowls"},
+        {ic:"🧀",n:"Paneer (100g) with meal",d:"Extra protein boost",cal:265,p:"18g protein"},
+      ],
+      snack:[
+        {ic:"🥜",n:"Peanut Butter (2 tbsp) + Roti",d:"Calorie-dense, healthy fats",cal:230,p:"8g protein"},
+        {ic:"🍌",n:"Banana Protein Shake",d:"Milk + banana + peanut butter",cal:380,p:"20g protein"},
+      ],
+      dinner:[
+        {ic:"🐟",n:"Fish / Chicken (150g)",d:"Protein before sleep = muscle growth",cal:280,p:"35g protein"},
+        {ic:"🍚",n:"Rice (1.5 cups) or 3 Chapati",d:"Moderate carbs at dinner",cal:330,p:"+ sabzi"},
+        {ic:"🥛",n:"Milk before bed (250ml)",d:"Casein protein = overnight growth",cal:150,p:"warm preferred"},
+      ],
+      avoid:["❌ Skip meals — never miss food","❌ Only cardio without lifting","❌ Too much junk food","❌ Coffee on empty stomach","❌ Alcohol — kills testosterone","❌ Very spicy food before workout"]
+    },
+    veg:{
+      breakfast:[
+        {ic:"🥛",n:"Full-fat Milk (400ml) + Oats",d:"Calories + protein to start",cal:320,p:"16g protein"},
+        {ic:"🍌",n:"Banana (2) + Peanut Butter",d:"Pre-workout energy bomb",cal:310,p:"10g protein"},
+        {ic:"🫓",n:"Paratha (2-3) with ghee + curd",d:"Calorie-dense veg breakfast",cal:420,p:"+ protein from curd"},
+        {ic:"🥜",n:"Soaked Almonds (20) + Walnuts",d:"Healthy fats for hormone boost",cal:180,p:"good fats"},
+      ],
+      lunch:[
+        {ic:"🧀",n:"Paneer (150g) curry",d:"Best veg muscle builder",cal:400,p:"27g protein"},
+        {ic:"🫘",n:"Rajma + Dal combined",d:"Maximum plant protein",cal:300,p:"22g protein"},
+        {ic:"🍚",n:"Rice (2 cups) or 4 Chapati",d:"Carb fuel for muscle",cal:440,p:"energy source"},
+        {ic:"🥛",n:"Lassi (1 glass)",d:"Extra calories + probiotics",cal:180,p:"6g protein"},
+      ],
+      snack:[
+        {ic:"🥜",n:"Peanut Butter (3 tbsp) + Bread",d:"High calorie healthy snack",cal:320,p:"12g protein"},
+        {ic:"🥛",n:"Banana Milkshake (full fat)",d:"Easy liquid calories",cal:380,p:"10g protein"},
+      ],
+      dinner:[
+        {ic:"🧀",n:"Paneer or Soya Chunks (150g)",d:"Slow protein before sleep",cal:300,p:"25g protein"},
+        {ic:"🍚",n:"Rice (1.5 cups) or 3 Chapati",d:"Carbs at dinner for recovery",cal:330,p:"+ 2 sabzi"},
+        {ic:"🥛",n:"Warm Milk with turmeric",d:"Anti-inflammatory + growth",cal:160,p:"8g protein"},
+      ],
+      avoid:["❌ Skip any meal — never","❌ Only cardio, no lifting","❌ Too many empty calories (chips, biscuits)","❌ Cold drinks instead of milk/lassi","❌ Skipping dal/paneer from meals","❌ Coffee before meals on empty stomach"]
+    }
   },
   maintain:{
-    breakfast:[
-      {ic:"🥚",n:"Eggs (3) + Toast (2)",d:"Balanced protein + carbs",cal:280,p:"21g protein"},
-      {ic:"🍊",n:"Fresh Fruit (1-2)",d:"Vitamins, minerals, fiber",cal:80,p:"any seasonal fruit"},
-      {ic:"🥛",n:"Milk (200ml) or Curd",d:"Calcium + probiotics",cal:120,p:"low-fat preferred"},
-    ],
-    lunch:[
-      {ic:"🍗",n:"Chicken or Dal (150g)",d:"Quality protein midday",cal:300,p:"30g protein"},
-      {ic:"🍚",n:"Rice (1 cup) or 2-3 Chapati",d:"Energy for the afternoon",cal:280,p:"balanced portion"},
-      {ic:"🥗",n:"Salad + Raita",d:"Fiber + probiotics",cal:80,p:"every lunch"},
-    ],
-    snack:[
-      {ic:"🥜",n:"Mixed Nuts (25g)",d:"Healthy fats + energy",cal:140,p:"handful"},
-      {ic:"☕",n:"Black Tea / Coffee",d:"Zero calorie, energy boost",cal:5,p:"no sugar"},
-    ],
-    dinner:[
-      {ic:"🐟",n:"Fish / Paneer / Chicken",d:"Protein for muscle maintenance",cal:250,p:"100-150g"},
-      {ic:"🥦",n:"Sabzi (2 types)",d:"Vitamins + minerals",cal:100,p:"any vegetables"},
-      {ic:"🫓",n:"2 Chapati",d:"Light on carbs at dinner",cal:140,p:"whole wheat"},
-    ],
-    avoid:["❌ Overeating at any single meal","❌ Skipping breakfast","❌ Too much oil/ghee","❌ Late night heavy meals","❌ Sugary drinks daily","❌ Processed / packaged foods regularly"]
+    nonveg:{
+      breakfast:[
+        {ic:"🥚",n:"Eggs (3) + Toast (2)",d:"Balanced protein + carbs",cal:280,p:"21g protein"},
+        {ic:"🍊",n:"Fresh Fruit (1-2)",d:"Vitamins, minerals, fiber",cal:80,p:"any seasonal fruit"},
+        {ic:"🥛",n:"Milk (200ml) or Curd",d:"Calcium + probiotics",cal:120,p:"low-fat preferred"},
+      ],
+      lunch:[
+        {ic:"🍗",n:"Chicken or Dal (150g)",d:"Quality protein midday",cal:300,p:"30g protein"},
+        {ic:"🍚",n:"Rice (1 cup) or 2-3 Chapati",d:"Energy for the afternoon",cal:280,p:"balanced portion"},
+        {ic:"🥗",n:"Salad + Raita",d:"Fiber + probiotics",cal:80,p:"every lunch"},
+      ],
+      snack:[
+        {ic:"🥜",n:"Mixed Nuts (25g)",d:"Healthy fats + energy",cal:140,p:"handful"},
+        {ic:"☕",n:"Black Tea / Coffee",d:"Zero calorie, energy boost",cal:5,p:"no sugar"},
+      ],
+      dinner:[
+        {ic:"🐟",n:"Fish / Paneer / Chicken",d:"Protein for muscle maintenance",cal:250,p:"100-150g"},
+        {ic:"🥦",n:"Sabzi (2 types)",d:"Vitamins + minerals",cal:100,p:"any vegetables"},
+        {ic:"🫓",n:"2 Chapati",d:"Light on carbs at dinner",cal:140,p:"whole wheat"},
+      ],
+      avoid:["❌ Overeating at any single meal","❌ Skipping breakfast","❌ Too much oil/ghee","❌ Late night heavy meals","❌ Sugary drinks daily","❌ Processed / packaged foods regularly"]
+    },
+    veg:{
+      breakfast:[
+        {ic:"🫓",n:"Besan Chilla (2) + Curd",d:"High protein veg start",cal:220,p:"15g protein"},
+        {ic:"🍊",n:"Fresh Fruit (1-2)",d:"Vitamins, fiber, antioxidants",cal:80,p:"any seasonal"},
+        {ic:"🥛",n:"Milk (200ml) or Curd",d:"Calcium + probiotics",cal:120,p:"low-fat"},
+      ],
+      lunch:[
+        {ic:"🧀",n:"Paneer (80g) + Dal",d:"Complete protein combination",cal:320,p:"24g protein"},
+        {ic:"🍚",n:"Rice (1 cup) or 2-3 Chapati",d:"Balanced carbs",cal:280,p:"controlled"},
+        {ic:"🥗",n:"Salad + Raita",d:"Fiber + gut health",cal:80,p:"every lunch"},
+      ],
+      snack:[
+        {ic:"🥜",n:"Roasted Chana (handful)",d:"Protein + fiber snack",cal:120,p:"7g protein"},
+        {ic:"☕",n:"Green Tea or Black Tea",d:"Metabolism boost, zero cal",cal:3,p:"no sugar"},
+      ],
+      dinner:[
+        {ic:"🧀",n:"Paneer or Tofu (100g)",d:"Protein for overnight maintenance",cal:200,p:"16g protein"},
+        {ic:"🥦",n:"Sabzi (2 types)",d:"Vitamins + minerals",cal:100,p:"any vegetables"},
+        {ic:"🫓",n:"2 Chapati",d:"Light carbs at dinner",cal:140,p:"whole wheat"},
+      ],
+      avoid:["❌ Overeating at any meal","❌ Skipping dal/paneer","❌ Too much ghee/butter","❌ Late night heavy meals","❌ Sugary drinks daily","❌ Maida products regularly"]
+    }
   }
 };
 
@@ -664,12 +754,13 @@ function doRegStep1(){
 /* ═══════════════════════════════════════════════════
    ONBOARDING
 ═══════════════════════════════════════════════════ */
-var OB_STEP=0;var OB_DATA={};var OB_TOTAL=5;
+var OB_STEP=0;var OB_DATA={};var OB_TOTAL=6;
 var OB_STEPS_CFG=[
   {title:"Your Gender",sub:"Select your gender to personalize your workout plan.",ico:"👤",type:"gender"},
   {title:"Your Age",sub:"Your age helps us set the right intensity for you.",ico:"🎂",type:"age"},
   {title:"Your Height & Weight",sub:"We'll calculate your BMI and design the perfect plan.",ico:"📏",type:"hw"},
   {title:"Your Goal",sub:"What do you want to achieve? We'll build your entire plan around this.",ico:"🎯",type:"goal"},
+  {title:"Diet Preference",sub:"Choose your diet type. Your food plan will be fully customized.",ico:"🥗",type:"diet"},
   {title:"Your BMI Result",sub:"Here's your personalized assessment.",ico:"📊",type:"result"},
 ];
 
@@ -702,6 +793,13 @@ function renderObStep(){
       +'<div class="goal-card'+(OB_DATA.goal==="gain"?" sel":"")+'" onclick="selGoal(\'gain\')"><div class="goal-ico">💪</div><div class="goal-t">Build Muscle</div><div class="goal-s">Mass & strength</div></div>'
       +'<div class="goal-card'+(OB_DATA.goal==="splits"?" sel":"")+'" onclick="selGoal(\'splits\')"><div class="goal-ico">🧘</div><div class="goal-t">Flexibility</div><div class="goal-s">Yoga & splits</div></div>'
       +'</div>';
+  } else if(cfg.type==="diet"){
+    html+='<div style="display:flex;flex-direction:column;gap:14px;">'
+      +'<div class="goal-card'+(OB_DATA.diet==="nonveg"?" sel":"")+'\" onclick="selDiet(\'nonveg\')" style="display:flex;align-items:center;gap:16px;text-align:left;padding:20px;">'
+      +'<span style="font-size:42px">🍗</span><div><div class="goal-t" style="font-size:17px">Non-Vegetarian</div><div class="goal-s" style="margin-top:4px">Eggs, chicken, fish, mutton — included</div></div></div>'
+      +'<div class="goal-card'+(OB_DATA.diet==="veg"?" sel":"")+'\" onclick="selDiet(\'veg\')" style="display:flex;align-items:center;gap:16px;text-align:left;padding:20px;">'
+      +'<span style="font-size:42px">🥦</span><div><div class="goal-t" style="font-size:17px">Vegetarian</div><div class="goal-s" style="margin-top:4px">Paneer, dal, tofu, milk, curd, eggs optional</div></div></div>'
+      +'</div>';
   } else if(cfg.type==="result"){
     var b=parseFloat(calcBMI(OB_DATA.weight,OB_DATA.height));
     var bc=bmiCat(b);
@@ -721,6 +819,7 @@ function renderObStep(){
 
 function selGender(g){OB_DATA.gender=g;renderObStep();}
 function selGoal(g){OB_DATA.goal=g;renderObStep();}
+function selDiet(d){OB_DATA.diet=d;renderObStep();}
 
 function obNext(){
   var cfg=OB_STEPS_CFG[OB_STEP];
@@ -733,6 +832,7 @@ function obNext(){
     OB_DATA.height=ht;OB_DATA.weight=wt;
   }
   if(cfg.type==="goal"&&!OB_DATA.goal){alert("Select your goal");return;}
+  if(cfg.type==="diet"&&!OB_DATA.diet){alert("Select your diet preference");return;}
   if(cfg.type==="result"){
     // Save user
     USERS[CU]=Object.assign(USERS[CU]||{},OB_DATA,{
@@ -877,16 +977,18 @@ function markDone(){
 ═══════════════════════════════════════════════════ */
 function renderFood(){
   var goal=U.goal==="splits"?"maintain":(U.goal||"maintain");
+  var diet=U.diet||"nonveg";
   var calTgt=calcCalTarget({weight:U.weight,height:U.height,age:U.age,gender:U.gender,goal:goal});
   var macros=calcMacros(calTgt,goal);
   var b=parseFloat(calcBMI(U.weight,U.height));
   var bc=bmiCat(b);
-  var fd=FOODS[goal]||FOODS.maintain;
+  var fd=(FOODS[goal]&&FOODS[goal][diet])||FOODS.maintain.nonveg;
+  var dietLabel=diet==="veg"?"🥦 Vegetarian":"🍗 Non-Vegetarian";
   // summary card
   document.getElementById("food-summary").style.background="linear-gradient(135deg,"+bc.c+"18,"+bc.c+"08)";
   document.getElementById("food-summary").style.border="1px solid "+bc.c+"30";
   document.getElementById("food-summary").innerHTML=
-    '<div class="cs-top"><div><div class="cs-ttl">'+calTgt+'<span style="font-size:16px;font-weight:400;color:var(--txt3)"> kcal/day</span></div><div class="cs-sub">For '+bc.cat+' · Goal: '+goal.charAt(0).toUpperCase()+goal.slice(1)+'</div></div><div style="font-size:40px">'+bc.ic+'</div></div>'
+    '<div class="cs-top"><div><div class="cs-ttl">'+calTgt+'<span style="font-size:16px;font-weight:400;color:var(--txt3)"> kcal/day</span></div><div class="cs-sub">'+dietLabel+' · '+bc.cat+' · Goal: '+goal.charAt(0).toUpperCase()+goal.slice(1)+'</div></div><div style="font-size:40px">'+bc.ic+'</div></div>'
     +'<div class="macro-row">'
     +'<div class="macro-card"><div class="mc-n" style="color:#F87171">'+macros.p+'g</div><div class="mc-l">Protein</div></div>'
     +'<div class="macro-card"><div class="mc-n" style="color:#FBBF24">'+macros.c+'g</div><div class="mc-l">Carbs</div></div>'
@@ -1030,6 +1132,54 @@ function saveM(){
   U.biceps=parseFloat(document.getElementById("u-bi").value)||U.biceps;
   USERS[CU]=U;sd("fp_users",USERS);
   closeM();renderProfile();renderSidebar();
+}
+
+var gdGoal="",gdDiet="";
+function openGD(){
+  gdGoal=U.goal||"lose";gdDiet=U.diet||"nonveg";
+  var c=getWOTemplate()[today].c;
+  var goals=[
+    {k:"lose",ic:"🔥",t:"Lose Fat",s:"Burn fat, get lean"},
+    {k:"maintain",ic:"⚖️",t:"Get Athletic",s:"Tone & perform"},
+    {k:"gain",ic:"💪",t:"Build Muscle",s:"Mass & strength"},
+    {k:"splits",ic:"🧘",t:"Flexibility",s:"Yoga & splits"},
+  ];
+  document.getElementById("gd-goals").innerHTML=goals.map(function(g){
+    return'<div class="goal-card'+(gdGoal===g.k?" sel":"")+'\" onclick="gdGoal=\''+g.k+'\';renderGD()">'
+      +'<div class="goal-ico">'+g.ic+'</div><div class="goal-t">'+g.t+'</div><div class="goal-s">'+g.s+'</div></div>';
+  }).join("");
+  document.getElementById("gd-diet").innerHTML=
+    '<div class="goal-card'+(gdDiet==="nonveg"?" sel":"")+'\" onclick="gdDiet=\'nonveg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
+    +'<span style="font-size:30px">🍗</span><div class="goal-t" style="font-size:13px">Non-Veg</div></div>'
+    +'<div class="goal-card'+(gdDiet==="veg"?" sel":"")+'\" onclick="gdDiet=\'veg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
+    +'<span style="font-size:30px">🥦</span><div class="goal-t" style="font-size:13px">Vegetarian</div></div>';
+  document.getElementById("gd-save").style.background=c;
+  document.getElementById("gdModal").style.display="flex";
+}
+function renderGD(){
+  var goals=[
+    {k:"lose",ic:"🔥",t:"Lose Fat",s:"Burn fat, get lean"},
+    {k:"maintain",ic:"⚖️",t:"Get Athletic",s:"Tone & perform"},
+    {k:"gain",ic:"💪",t:"Build Muscle",s:"Mass & strength"},
+    {k:"splits",ic:"🧘",t:"Flexibility",s:"Yoga & splits"},
+  ];
+  document.getElementById("gd-goals").innerHTML=goals.map(function(g){
+    return'<div class="goal-card'+(gdGoal===g.k?" sel":"")+'\" onclick="gdGoal=\''+g.k+'\';renderGD()">'
+      +'<div class="goal-ico">'+g.ic+'</div><div class="goal-t">'+g.t+'</div><div class="goal-s">'+g.s+'</div></div>';
+  }).join("");
+  document.getElementById("gd-diet").innerHTML=
+    '<div class="goal-card'+(gdDiet==="nonveg"?" sel":"")+'\" onclick="gdDiet=\'nonveg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
+    +'<span style="font-size:30px">🍗</span><div class="goal-t" style="font-size:13px">Non-Veg</div></div>'
+    +'<div class="goal-card'+(gdDiet==="veg"?" sel":"")+'\" onclick="gdDiet=\'veg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
+    +'<span style="font-size:30px">🥦</span><div class="goal-t" style="font-size:13px">Vegetarian</div></div>';
+}
+function closeGD(){document.getElementById("gdModal").style.display="none";}
+function saveGD(){
+  U.goal=gdGoal;U.diet=gdDiet;
+  USERS[CU]=U;sd("fp_users",USERS);
+  closeGD();renderProfile();renderSidebar();renderWorkout();
+  if(curPg==="food")renderFood();
+  alert("✅ Goal & Diet updated!");
 }
 
 /* ═══════════════════════════════════════════════════
