@@ -1053,8 +1053,8 @@ function sXT(eid,nm,sec,c){xTot=xCur=sec;document.getElementById("xnm").textCont
 function uXI(){var n=document.getElementById("xnum"),u=document.querySelector(".x-u");if(xCur>=60){n.textContent=Math.floor(xCur/60)+"m "+("0"+xCur%60).slice(-2)+"s";u.textContent="remaining";}else{n.textContent=xCur;u.textContent="seconds";}document.getElementById("xrc").style.strokeDashoffset=xC*(1-xCur/xTot);}
 function stopX(){clearInterval(XT);document.getElementById("xOv").classList.remove("open");}
 
-function openV(id){if(!id)return;document.getElementById("yfr").src="https://www.youtube.com/embed/"+id+"?autoplay=1";document.getElementById("vOv").classList.add("open");}
-function closeV(){document.getElementById("yfr").src="";document.getElementById("vOv").classList.remove("open");}
+function openV(id){if(!id)return;window.open("https://www.youtube.com/watch?v="+id,"_blank");}
+function closeV(){document.getElementById("vOv").classList.remove("open");}
 
 function beep(f,t){try{var c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f||880;g.gain.value=.35;o.start();o.stop(c.currentTime+(t||.15));}catch(e){}}
 
