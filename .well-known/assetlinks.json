@@ -3,6 +3,26 @@
   "target": {
     "namespace": "android_app",
     "package_name": "com.nitin.fitpro",
-    "sha256_cert_fingerprints": ["YOUR_SHA256"]
+    "sha256_cert_fingerprints": ["19:2C:24:A0:88:F9:64:74:60:81:DD:93:65:DC:97:CB:C6:D9:71:12:B3:AF:B7:32:3C:8D:57:9B:6C:F3:58:F2"]
   }
 }]
+```
+
+Click **Commit changes** ✅
+
+---
+
+## Then do this:
+
+**1.** Wait 2 minutes for GitHub to update
+
+**2.** Verify it's working — open this URL in browser:
+```
+https://nitintomarmudrawala.github.io/fitpro/.well-known/assetlinks.json
+```
+You should see the JSON content ✅
+
+**3.** Rebuild APK:
+```
+cd C:\fitpro-apk
+bubblewrap build
