@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#FF6B2B"/>
+<title>FitPro</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(e){console.log("SW:",e);});
+  });
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#07070F;--bg2:#0F0F1C;--bg3:#141425;--bg4:#1A1A2E;
+  --bdr:#1E1E35;--bdr2:#252540;
+  --txt:#FFFFFF;--txt2:#9999BB;--txt3:#55556A;
+  --acc:#FF6B2B;--grn:#4ADE80;--red:#F87171;--pur:#A78BFA;--yel:#FBBF24;--blu:#60A5FA;--teal:#34D399;
+  --r:18px;--r2:14px;--r3:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none;}
+body{color:var(--txt);font-family:'Inter',sans-serif;font-size:16px;overflow:hidden;}
+::-webkit-scrollbar{display:none;}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;overflow:hidden;z-index:10;}
+.screen.show{display:flex;}
+
+/* ── ONBOARDING / AUTH ── */
+#s-auth{align-items:center;justify-content:center;padding:24px;}
+.auth-logo{font-family:'Bebas Neue',cursive;font-size:52px;letter-spacing:3px;text-align:center;margin-bottom:6px;}
+.auth-tag{font-size:14px;color:var(--txt3);text-align:center;margin-bottom:36px;}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:14px;padding:4px;margin-bottom:24px;width:100%;}
+.auth-tab{flex:1;padding:11px;border:none;background:transparent;border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:var(--txt3);cursor:pointer;transition:all .2s;}
+.auth-tab.act{background:var(--bg4);color:var(--txt);}
+.inp-grp{margin-bottom:14px;}
+.inp-grp label{display:block;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:6px;}
+.inp-grp input, .inp-grp select{width:100%;background:var(--bg2);border:1px solid var(--bdr2);border-radius:12px;padding:14px 16px;color:var(--txt);font-family:'Inter',sans-serif;font-size:16px;outline:none;min-height:50px;}
+.inp-grp input:focus, .inp-grp select:focus{border-color:var(--acc);}
+.inp-grp select option{background:#1a1a2e;}
+.gen-row{display:flex;gap:10px;}
+.gen-btn{flex:1;padding:14px;border:2px solid var(--bdr2);border-radius:12px;background:transparent;color:var(--txt3);font-family:'Inter',sans-serif;font-size:22px;cursor:pointer;text-align:center;transition:all .2s;min-height:60px;}
+.gen-btn.sel{border-color:var(--acc);background:var(--acc)15;color:var(--txt);}
+.gen-btn:active{transform:scale(.94);}
+.big-btn{width:100%;padding:17px;border:none;border-radius:14px;font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:2px;cursor:pointer;background:var(--acc);color:#fff;min-height:56px;margin-top:8px;}
+.big-btn:active{transform:scale(.97);}
+.auth-err{background:#2a1010;border:1px solid #5a2020;border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:12px;display:none;}
+
+/* ── STEP ONBOARDING ── */
+#s-onboard{justify-content:flex-start;}
+.ob-progress{padding:max(env(safe-area-inset-top),16px) 20px 0;}
+.ob-steps{display:flex;gap:4px;margin-bottom:20px;}
+.ob-step{flex:1;height:4px;border-radius:4px;background:var(--bg3);transition:background .3s;}
+.ob-step.done{background:var(--acc);}
+.ob-body{flex:1;padding:0 20px 20px;overflow-y:auto;}
+.ob-ico{font-size:52px;margin-bottom:14px;}
+.ob-ttl{font-family:'Bebas Neue',cursive;font-size:32px;letter-spacing:1px;margin-bottom:6px;}
+.ob-sub{font-size:15px;color:var(--txt3);margin-bottom:28px;line-height:1.5;}
+.ob-foot{padding:16px 20px max(env(safe-area-inset-bottom),16px);border-top:1px solid var(--bdr);display:flex;gap:10px;}
+.ob-back{flex:1;background:var(--bg2);border:1px solid var(--bdr2);border-radius:14px;padding:15px;font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:var(--txt2);cursor:pointer;min-height:54px;}
+.ob-next{flex:2;background:var(--acc);border:none;border-radius:14px;padding:15px;font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:2px;color:#fff;cursor:pointer;min-height:54px;}
+.ob-next:active,.ob-back:active{transform:scale(.96);}
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.goal-card{background:var(--bg2);border:2px solid var(--bdr2);border-radius:14px;padding:16px;cursor:pointer;text-align:center;transition:all .2s;}
+.goal-card.sel{border-color:var(--acc);background:var(--acc)18;}
+.goal-card:active{transform:scale(.94);}
+.goal-ico{font-size:32px;margin-bottom:8px;}
+.goal-t{font-size:14px;font-weight:700;}
+.goal-s{font-size:12px;color:var(--txt3);margin-top:3px;}
+.bmi-result{background:var(--bg2);border-radius:16px;padding:20px;margin-top:16px;text-align:center;}
+.bmi-big{font-family:'Bebas Neue',cursive;font-size:64px;line-height:1;}
+.bmi-cat{font-size:16px;font-weight:700;margin-top:4px;}
+.bmi-desc{font-size:13px;color:var(--txt3);margin-top:8px;line-height:1.5;}
+
+/* ── MAIN APP ── */
+#s-app{flex-direction:row;}
+
+/* SIDEBAR */
+#sidebar{width:280px;background:#0A0A18;border-right:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0;transform:translateX(-100%);position:absolute;left:0;top:0;bottom:0;z-index:400;transition:transform .3s cubic-bezier(.4,0,.2,1);}
+#sidebar.open{transform:translateX(0);}
+#sb-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:399;display:none;backdrop-filter:blur(2px);}
+#sb-overlay.show{display:block;}
+.sb-hd{padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--bdr);}
+.sb-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:10px;}
+.sb-name{font-size:17px;font-weight:700;line-height:1.2;}
+.sb-uname{font-size:13px;color:var(--txt3);margin-top:2px;}
+.sb-bmi{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1px;margin-top:6px;}
+.sb-menu{flex:1;overflow-y:auto;padding:10px 0;}
+.sb-item{display:flex;align-items:center;gap:14px;padding:15px 20px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;}
+.sb-item:active{background:var(--bg3);}
+.sb-item.act{border-left-color:var(--acc);background:var(--bg2);}
+.sb-item.act .sb-item-t{color:var(--acc);}
+.sb-ico{font-size:22px;width:28px;text-align:center;}
+.sb-item-t{font-size:15px;font-weight:600;color:var(--txt2);}
+.sb-div{height:1px;background:var(--bdr);margin:8px 16px;}
+.sb-ft{padding:16px 20px max(env(safe-area-inset-bottom),16px);border-top:1px solid var(--bdr);}
+.sb-logout{width:100%;background:var(--bg2);border:1px solid var(--bdr2);border-radius:12px;padding:12px;font-size:14px;font-weight:700;color:var(--red);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.sb-logout:active{transform:scale(.96);}
+
+/* MAIN CONTENT */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+#hdr{padding:max(env(safe-area-inset-top),10px) 16px 12px;background:linear-gradient(170deg,#0F0F1E,var(--bg));border-bottom:1px solid var(--bdr);flex-shrink:0;}
+.hdr-row{display:flex;align-items:center;gap:12px;}
+.hbg{background:none;border:none;font-size:22px;cursor:pointer;padding:4px;color:var(--txt);min-width:36px;}
+.hbg:active{transform:scale(.88);}
+.hdr-c{flex:1;}
+.hdr-ttl{font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:1.5px;line-height:1;}
+.hdr-sub{font-size:12px;color:var(--txt3);margin-top:1px;}
+.hdr-streak{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.hs-n{font-family:'Bebas Neue',cursive;font-size:22px;color:var(--acc);line-height:1;}
+.hs-t{font-size:9px;color:var(--txt3);font-weight:700;letter-spacing:1px;}
+.hdr-prog{margin-top:10px;}
+.hprow{display:flex;justify-content:space-between;margin-bottom:5px;}
+.hprow span{font-size:12px;color:var(--txt3);font-weight:600;}
+.pbar{background:var(--bg3);border-radius:6px;height:6px;overflow:hidden;}
+.pf{height:100%;border-radius:6px;transition:width .5s ease;}
+
+/* SCROLL CONTENT */
+#page{flex:1;overflow-y:auto;padding:14px 14px 24px;-webkit-overflow-scrolling:touch;}
+.pg{display:none;animation:su .25s ease;}
+.pg.act{display:block;}
+@keyframes su{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.pg-ttl{font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1px;margin-bottom:16px;}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:12px;}
+.cp{padding:15px 16px;}
+.tag{font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:20px;text-transform:uppercase;display:inline-block;}
+
+/* WORKOUT PAGE */
+.wo-hero{border-radius:var(--r);padding:18px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.wo-fc{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.wo-nm{font-family:'Bebas Neue',cursive;font-size:30px;line-height:1;letter-spacing:1px;}
+.wo-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.wchip{background:rgba(255,255,255,.08);border-radius:8px;padding:5px 10px;font-size:13px;color:var(--txt2);}
+.wo-em{font-size:50px;flex-shrink:0;}
+.tgt-box{border-radius:var(--r2);padding:14px 16px;margin-bottom:12px;border-left:3px solid;background:var(--bg2);}
+.tgt-l{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px;}
+.tgt-t{font-size:15px;font-weight:600;color:var(--txt2);line-height:1.45;}
+.done-b{background:#081C10;border:1px solid #1A5C2A;border-radius:var(--r2);padding:14px 16px;margin-bottom:12px;display:none;align-items:center;gap:12px;}
+.done-b.show{display:flex;}
+.exc{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);margin-bottom:10px;}
+.xp{padding:15px 16px;}
+.xtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.xnm{font-size:17px;font-weight:700;margin-top:4px;line-height:1.2;}
+.xmt{font-size:13px;color:var(--txt3);margin-top:3px;}
+.db{background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;cursor:pointer;min-width:74px;min-height:46px;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;}
+.db:active{transform:scale(.9);}
+.pthin{background:var(--bg3);border-radius:4px;height:3px;margin:12px 0 10px;}
+.ptf{height:100%;border-radius:4px;transition:width .3s;}
+.sw{display:flex;gap:9px;flex-wrap:wrap;}
+.sb2{width:46px;height:46px;border-radius:50%;border:2px solid var(--bdr2);background:transparent;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;font-weight:700;color:var(--txt3);display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.sb2:active{transform:scale(.82);}
+.sb2.done{color:#000;}
+.tmr-r{margin-top:10px;}
+.tb{background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:46px;}
+.tb:active{transform:scale(.94);}
+.nk-ttl{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin:18px 0 10px;}
+.nkc{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:10px;}
+.nkn{font-size:16px;font-weight:700;}
+.nkm{font-size:13px;color:var(--txt3);margin-top:2px;}
+.ck{width:46px;height:46px;border-radius:50%;border:2px solid var(--bdr2);background:transparent;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ck:active{transform:scale(.85);}
+.ck.done{border-color:transparent;}
+.cb{width:100%;padding:18px;border:none;border-radius:var(--r);font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:2px;cursor:pointer;margin-top:10px;min-height:60px;transition:all .2s;}
+.cb:active{transform:scale(.97);}
+
+/* FOOD PAGE */
+.cal-summary{border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.cs-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.cs-ttl{font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1px;}
+.cs-sub{font-size:13px;color:var(--txt2);margin-top:2px;}
+.cal-rings{display:flex;gap:16px;justify-content:center;margin-bottom:14px;}
+.cr{text-align:center;}
+.cr-n{font-family:'Bebas Neue',cursive;font-size:26px;line-height:1;}
+.cr-l{font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:3px;}
+.macro-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.macro-card{background:rgba(255,255,255,.06);border-radius:12px;padding:12px;text-align:center;}
+.mc-n{font-family:'Bebas Neue',cursive;font-size:22px;line-height:1;}
+.mc-l{font-size:11px;color:var(--txt3);font-weight:700;margin-top:3px;}
+.meal-section{margin-bottom:16px;}
+.meal-ttl{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.food-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px;}
+.food-ico{font-size:36px;flex-shrink:0;width:50px;text-align:center;}
+.food-info{flex:1;}
+.food-nm{font-size:15px;font-weight:700;}
+.food-desc{font-size:13px;color:var(--txt3);margin-top:2px;line-height:1.4;}
+.food-r{text-align:right;flex-shrink:0;}
+.food-cal{font-family:'Bebas Neue',cursive;font-size:20px;line-height:1;}
+.food-unit{font-size:11px;color:var(--txt3);font-weight:600;}
+.water-card{background:linear-gradient(135deg,#1a2a3a,#0f1a2a);border:1px solid #2a4a6a;border-radius:var(--r);padding:16px;margin-bottom:14px;}
+.wtr-ttl{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#60A5FA;margin-bottom:10px;}
+.wtr-drops{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.wdrop{width:36px;height:36px;border-radius:50%;border:2px solid #2a4a6a;background:transparent;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.wdrop.filled{background:#2a6a9a;border-color:#60A5FA;}
+.wdrop:active{transform:scale(.88);}
+
+/* BODY PICS */
+.mirror-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.mn-btn{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:11px 18px;font-size:15px;font-weight:700;color:var(--txt2);cursor:pointer;min-height:46px;}
+.mn-btn:active{transform:scale(.92);}
+.mn-dt{font-size:15px;font-weight:700;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.ps{border-radius:var(--r2);aspect-ratio:.78;position:relative;cursor:pointer;background:var(--bg2);border:2px dashed var(--bdr2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;}
+.ps img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.ps-ic{font-size:32px;position:relative;z-index:1;}
+.ps-lb{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--txt3);text-transform:uppercase;position:relative;z-index:1;}
+.pov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);z-index:2;display:flex;align-items:flex-end;padding:8px;}
+.pdel{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.7);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:14px;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;}
+.pdel:active{transform:scale(.85);}
+.nb2{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:14px;}
+.nb2-l{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px;}
+.nb2-ta{width:100%;background:transparent;border:none;color:var(--txt2);font-family:'Inter',sans-serif;font-size:15px;resize:none;outline:none;height:72px;line-height:1.55;}
+input[type=file]{display:none;}
+.hs{display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;}
+.ht{flex-shrink:0;width:76px;border-radius:10px;overflow:hidden;cursor:pointer;}
+.ht img{width:100%;height:100px;object-fit:cover;display:block;}
+.ht-d{background:var(--bg2);text-align:center;font-size:9px;color:var(--txt3);font-weight:600;padding:3px;}
+
+/* PROFILE PAGE */
+.prof-hero{border-radius:var(--r);padding:24px;margin-bottom:14px;text-align:center;}
+.prof-av{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;}
+.prof-nm{font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1px;}
+.prof-un{font-size:14px;color:var(--txt3);margin-top:2px;}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.metric-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:14px;text-align:center;}
+.metric-ico{font-size:24px;margin-bottom:6px;}
+.metric-v{font-family:'Bebas Neue',cursive;font-size:28px;line-height:1;}
+.metric-l{font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;}
+.prog-section{margin-bottom:14px;}
+.prog-row2{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.prog-row2 span{font-size:13px;font-weight:600;}
+.prog-row2 span:last-child{color:var(--txt3);}
+.prog-bg2{background:var(--bg3);border-radius:6px;height:8px;overflow:hidden;}
+.prog-fill2{height:100%;border-radius:6px;transition:width .5s;}
+.cal-30{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px;}
+.cal-c{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.upd-btn2{width:100%;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:15px;font-size:16px;font-weight:700;color:var(--txt2);cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;}
+.upd-btn2:active{transform:scale(.97);}
+
+/* SETTINGS PAGE */
+.set-item{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.set-l{display:flex;align-items:center;gap:12px;}
+.set-ico{font-size:22px;}
+.set-nm{font-size:15px;font-weight:600;}
+.set-sub{font-size:12px;color:var(--txt3);margin-top:2px;}
+.toggle{width:46px;height:26px;background:var(--bg3);border:none;border-radius:13px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--grn);}
+.toggle::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;}
+.toggle.on::after{left:23px;}
+
+/* HELP PAGE */
+.help-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:16px;margin-bottom:10px;}
+.help-q{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.help-a{font-size:14px;color:var(--txt2);line-height:1.6;}
+
+/* OVERLAYS */
+#rOv,#xOv,#vOv,#mOv{position:fixed;inset:0;background:rgba(7,7,15,.97);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+#rOv.open,#xOv.open,#vOv.open,#mOv.open{display:flex;}
+.r-ring{transform:rotate(-90deg);}
+.rrc{transition:stroke-dashoffset .9s linear;stroke-linecap:round;}
+.r-cnt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:62px;}
+.r-ttl{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);}
+.r-opts{display:flex;gap:10px;}
+.ro{background:var(--bg2);border:1px solid var(--bdr2);border-radius:24px;padding:11px 22px;font-size:15px;font-weight:700;color:var(--txt3);cursor:pointer;min-height:46px;display:flex;align-items:center;}
+.ro.act2{background:var(--bg4);color:var(--txt);}
+.ro:active{transform:scale(.92);}
+.r-skip{background:var(--bg3);border:1px solid var(--bdr2);color:var(--txt2);border-radius:30px;padding:13px 34px;font-size:15px;font-weight:700;cursor:pointer;min-height:50px;}
+.r-skip:active{transform:scale(.95);}
+.x-nm{font-size:20px;font-weight:700;color:var(--txt2);text-align:center;padding:0 24px;line-height:1.3;}
+.x-cnt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.x-n{font-family:'Bebas Neue',cursive;font-size:68px;line-height:1;}
+.x-u{font-size:12px;color:var(--txt3);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.ov-close{background:var(--bg3);border:1px solid var(--bdr2);color:var(--txt2);border-radius:30px;padding:13px 36px;font-size:15px;font-weight:700;cursor:pointer;min-height:50px;}
+.ov-close:active{transform:scale(.95);}
+.v-wrap{width:100%;border-radius:16px;overflow:hidden;max-width:440px;}
+.v-wrap iframe{border:none;display:block;width:100%;height:calc(56.25vw);max-height:270px;}
+.mcard{background:var(--bg2);border:1px solid var(--bdr2);border-radius:var(--r);padding:24px;width:100%;max-width:380px;}
+.mcard-t{font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:1px;margin-bottom:18px;}
+.mf{margin-bottom:14px;}
+.mf label{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--txt3);display:block;margin-bottom:6px;}
+.mf input{width:100%;background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;padding:13px 14px;color:var(--txt);font-family:'Inter',sans-serif;font-size:16px;outline:none;min-height:50px;}
+.mf input:focus{border-color:var(--acc);}
+.ms{width:100%;padding:15px;border:none;border-radius:12px;font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:2px;cursor:pointer;min-height:56px;}
+.ms:active{transform:scale(.97);}
+.mc-x{width:100%;padding:12px;border:none;background:transparent;color:var(--txt3);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;}
+</style>
+</head>
+<body>
+
+<!-- ══════ AUTH SCREEN ══════ -->
+<div class="screen show" id="s-auth">
+  <div style="width:100%;max-width:400px;">
+    <div class="auth-logo">FIT<span id="auth-acc" style="color:var(--acc)">PRO</span></div>
+    <div class="auth-tag">Your Personal Fitness Coach</div>
+    <div class="auth-tabs">
+      <button class="auth-tab act" onclick="authTab('login')">Login</button>
+      <button class="auth-tab" onclick="authTab('reg')">Register</button>
+    </div>
+    <!-- LOGIN -->
+    <div id="auth-login">
+      <div class="inp-grp"><label>Username</label><input type="text" id="lg-user" placeholder="Enter your username" autocomplete="off"/></div>
+      <div class="auth-err" id="lg-err">Username not found. Please register first.</div>
+      <button class="big-btn" onclick="doLogin()">LOGIN →</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--txt3)">New here? <span style="color:var(--acc);cursor:pointer;font-weight:700" onclick="authTab('reg')">Create Account</span></div>
+    </div>
+    <!-- REGISTER -->
+    <div id="auth-reg" style="display:none">
+      <div class="inp-grp"><label>Full Name</label><input type="text" id="rg-name" placeholder="Your full name"/></div>
+      <div class="inp-grp"><label>Username</label><input type="text" id="rg-user" placeholder="Choose a username" autocomplete="off"/></div>
+      <div class="auth-err" id="rg-err">Username already taken. Try another.</div>
+      <button class="big-btn" onclick="doRegStep1()">CONTINUE →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ONBOARDING SCREEN ══════ -->
+<div class="screen" id="s-onboard">
+  <div class="ob-progress">
+    <div class="ob-steps" id="ob-steps"></div>
+  </div>
+  <div class="ob-body" id="ob-body"></div>
+  <div class="ob-foot">
+    <button class="ob-back" id="ob-back" onclick="obBack()">Back</button>
+    <button class="ob-next" id="ob-next" onclick="obNext()">NEXT →</button>
+  </div>
+</div>
+
+<!-- ══════ MAIN APP ══════ -->
+<div class="screen" id="s-app">
+  <div id="sb-overlay" onclick="closeSB()"></div>
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-hd">
+      <div class="sb-avatar" id="sb-av"></div>
+      <div class="sb-name" id="sb-nm"></div>
+      <div class="sb-uname" id="sb-un"></div>
+      <div class="sb-bmi" id="sb-bmi"></div>
+    </div>
+    <div class="sb-menu">
+      <div class="sb-item act" data-pg="workout" onclick="navTo('workout')"><span class="sb-ico">🏋️</span><span class="sb-item-t">Gym & Yoga</span></div>
+      <div class="sb-item" data-pg="food" onclick="navTo('food')"><span class="sb-ico">🥗</span><span class="sb-item-t">Food & Nutrition</span></div>
+      <div class="sb-item" data-pg="bodypics" onclick="navTo('bodypics')"><span class="sb-ico">📸</span><span class="sb-item-t">Body Progress</span></div>
+      <div class="sb-item" data-pg="profile" onclick="navTo('profile')"><span class="sb-ico">👤</span><span class="sb-item-t">Profile</span></div>
+      <div class="sb-div"></div>
+      <div class="sb-item" data-pg="settings" onclick="navTo('settings')"><span class="sb-ico">⚙️</span><span class="sb-item-t">Settings</span></div>
+      <div class="sb-item" data-pg="help" onclick="navTo('help')"><span class="sb-ico">❓</span><span class="sb-item-t">Help & Guide</span></div>
+    </div>
+    <div class="sb-ft">
+      <button class="sb-logout" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+  <!-- MAIN -->
+  <div id="main">
+    <div id="hdr">
+      <div class="hdr-row">
+        <button class="hbg" onclick="openSB()">☰</button>
+        <div class="hdr-c">
+          <div class="hdr-ttl" id="hdr-ttl">GYM & YOGA</div>
+          <div class="hdr-sub" id="hdr-sub"></div>
+        </div>
+        <div class="hdr-streak"><span style="font-size:20px">🔥</span><div><div class="hs-n" id="hsk">0</div><div class="hs-t">STREAK</div></div></div>
+      </div>
+      <div class="hdr-prog" id="hdr-prog">
+        <div class="hprow"><span>Today's Progress</span><span id="hpt">0/0 sets</span></div>
+        <div class="pbar"><div class="pf" id="hpf" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="page">
+      <!-- WORKOUT -->
+      <div class="pg act" id="pg-workout">
+        <div class="wo-hero" id="t-hero"><div style="flex:1"><div class="wo-fc" id="t-fc"></div><div class="wo-nm" id="t-nm"></div><div class="wo-chips" id="t-ch"></div></div><div class="wo-em" id="t-em"></div></div>
+        <div class="tgt-box" id="tbox"><div class="tgt-l">PERSONALIZED TARGET</div><div class="tgt-t" id="ttxt"></div></div>
+        <div id="dban" class="done-b"><div style="font-size:28px">🏆</div><div><div style="font-size:15px;font-weight:700;color:var(--grn)">Workout Done! Legend!</div><div style="font-size:13px;color:#2D6B40;margin-top:2px">Rest well — you earned it.</div></div></div>
+        <div id="exl"></div>
+        <div class="nk-ttl">Face & Neck Routine</div>
+        <div id="nkl"></div>
+        <button class="cb" id="cbtn" onclick="markDone()"></button>
+      </div>
+      <!-- FOOD -->
+      <div class="pg" id="pg-food">
+        <div class="cal-summary" id="food-summary"></div>
+        <div id="food-meals"></div>
+        <div class="water-card">
+          <div class="wtr-ttl">💧 Daily Water Target</div>
+          <div class="wtr-drops" id="wtr-drops"></div>
+          <div style="font-size:13px;color:var(--txt3)" id="wtr-lbl"></div>
+        </div>
+        <div class="card"><div class="cp">
+          <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px">⚠️ Foods to Avoid</div>
+          <div id="avoid-foods"></div>
+        </div></div>
+      </div>
+      <!-- BODY PICS -->
+      <div class="pg" id="pg-bodypics">
+        <div class="mirror-nav">
+          <button class="mn-btn" onclick="mD(-1)">◀</button>
+          <div class="mn-dt" id="mdt"></div>
+          <button class="mn-btn" onclick="mD(1)">▶</button>
+        </div>
+        <div class="pgrid" id="pgrid"></div>
+        <div class="nb2"><div class="nb2-l">Today's Notes</div><textarea class="nb2-ta" id="nta" placeholder="How do you feel? Any changes noticed?"></textarea></div>
+        <button class="cb" id="snbtn" onclick="saveNote()" style="margin-top:10px;font-size:20px;min-height:52px;background:var(--bg3);color:var(--txt2)">SAVE NOTE</button>
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin:18px 0 10px">Photo History</div>
+        <div class="hs" id="hstrip"></div>
+        <input type="file" id="pf-front" accept="image/*" onchange="hPhoto('front',this)"/>
+        <input type="file" id="pf-side" accept="image/*" onchange="hPhoto('side',this)"/>
+        <input type="file" id="pf-back" accept="image/*" onchange="hPhoto('back',this)"/>
+        <input type="file" id="pf-face" accept="image/*" onchange="hPhoto('face',this)"/>
+      </div>
+      <!-- PROFILE -->
+      <div class="pg" id="pg-profile">
+        <div class="prof-hero" id="prof-hero"></div>
+        <div class="metrics-grid" id="metrics-grid"></div>
+        <button class="upd-btn2" onclick="openM()">📏 Update Measurements</button>
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px">Goal Targets Progress</div>
+        <div id="prof-targets"></div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin:16px 0 10px">Last 30 Days</div>
+        <div class="cal-30" id="cal30"></div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px">Achievements</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px" id="badges"></div>
+      </div>
+      <!-- SETTINGS -->
+      <div class="pg" id="pg-settings">
+        <div class="set-item"><div class="set-l"><span class="set-ico">🔔</span><div><div class="set-nm">Workout Reminders</div><div class="set-sub">Daily push notification</div></div></div><button class="toggle" id="tog-notif" onclick="togSet('notif',this)"></button></div>
+        <div class="set-item"><div class="set-l"><span class="set-ico">🔊</span><div><div class="set-nm">Sound Effects</div><div class="set-sub">Rest timer beeps</div></div></div><button class="toggle on" id="tog-sound" onclick="togSet('sound',this)"></button></div>
+        <div class="set-item"><div class="set-l"><span class="set-ico">⏱</span><div><div class="set-nm">Auto Rest Timer</div><div class="set-sub">Start after each set</div></div></div><button class="toggle on" id="tog-rest" onclick="togSet('rest',this)"></button></div>
+        <div class="set-item"><div class="set-l"><span class="set-ico">🌙</span><div><div class="set-nm">Dark Mode</div><div class="set-sub">Always on (recommended)</div></div></div><button class="toggle on" style="opacity:.5"></button></div>
+        <div class="card" style="margin-top:8px"><div class="cp">
+          <div style="font-size:14px;font-weight:700;margin-bottom:6px">About FitPro</div>
+          <div style="font-size:13px;color:var(--txt3);line-height:1.6">Version 2.0 · Built for you<br/>100% free · No ads · No subscription<br/>Your data stays on your device<br/>Works offline after first load</div>
+        </div></div>
+      </div>
+      <!-- HELP -->
+      <div class="pg" id="pg-help">
+        <div class="help-card"><div class="help-q">💪 How are workouts personalized?</div><div class="help-a">Based on your BMI, gender, age, and goal, FitPro selects the right exercises, intensity, and sets for you. Underweight users get muscle-building programs. Overweight users get fat-loss + strength combos.</div></div>
+        <div class="help-card"><div class="help-q">🥗 How is calorie target calculated?</div><div class="help-a">Using Mifflin-St Jeor formula for BMR, adjusted by your activity level (TDEE). Then we add or subtract based on your goal: fat loss (-500 cal), maintenance (same), muscle gain (+300 cal).</div></div>
+        <div class="help-card"><div class="help-q">📸 Are my photos private?</div><div class="help-a">100% private. All photos are stored only on your phone (localStorage). They never leave your device. No server, no cloud upload.</div></div>
+        <div class="help-card"><div class="help-q">⏱ How do set timers work?</div><div class="help-a">Tap the set circle to mark it done. A rest timer pops up automatically. For timed exercises (plank, cardio), tap "Start Timer" to count down. A beep sounds when done.</div></div>
+        <div class="help-card"><div class="help-q">🧘 How do I start the splits?</div><div class="help-a">Go to Gym & Yoga → scroll to the Splits section. Start Level 1 daily. Hold each stretch 60 seconds minimum. Progress to next level when it feels easy. Full splits in 90-120 days with daily work.</div></div>
+        <div class="help-card"><div class="help-q">👥 Can my friends use this too?</div><div class="help-a">Yes! Share the APK. Each person registers their own username and gets a completely personalized plan based on their own BMI, gender, and goals. All data is separate.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAYS -->
+<div id="rOv">
+  <div class="r-ttl">Rest Time</div>
+  <div style="position:relative"><svg class="r-ring" width="190" height="190" viewBox="0 0 190 190"><circle cx="95" cy="95" r="82" fill="none" stroke="#1A1A2E" stroke-width="12"/><circle id="rrc" class="rrc" cx="95" cy="95" r="82" fill="none" stroke="var(--acc)" stroke-width="12" stroke-dasharray="515" stroke-dashoffset="0"/></svg><div class="r-cnt" id="rcnt">60</div></div>
+  <div class="r-opts"><div class="ro act2" onclick="setR(30)">30s</div><div class="ro" onclick="setR(60)">60s</div><div class="ro" onclick="setR(90)">90s</div></div>
+  <button class="r-skip" onclick="skipR()">Skip Rest ▶</button>
+</div>
+<div id="xOv">
+  <div class="x-nm" id="xnm"></div>
+  <div style="position:relative"><svg class="r-ring" width="210" height="210" viewBox="0 0 210 210"><circle cx="105" cy="105" r="90" fill="none" stroke="#1A1A2E" stroke-width="12"/><circle id="xrc" class="rrc" cx="105" cy="105" r="90" fill="none" stroke-width="12" stroke-dasharray="565" stroke-dashoffset="0"/></svg><div class="x-cnt"><div class="x-n" id="xnum">45</div><div class="x-u">seconds</div></div></div>
+  <button class="ov-close" onclick="stopX()">✓ Done</button>
+</div>
+<div id="vOv" onclick="closeV()">
+  <div class="v-wrap" onclick="event.stopPropagation()"><iframe id="yfr" src="" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+  <div style="color:var(--txt3);font-size:13px">Tap outside to close</div>
+  <button class="ov-close" onclick="closeV()">✕ Close</button>
+</div>
+<div id="mOv"><div class="mcard" style="max-height:90vh;overflow-y:auto">
+  <div class="mcard-t">Update Measurements</div>
+  <div class="mf"><label>Weight (kg)</label><input type="number" id="u-wt" inputmode="decimal"/></div>
+  <div class="mf"><label>Chest + Shoulders (in)</label><input type="number" id="u-ch" inputmode="decimal"/></div>
+  <div class="mf"><label>Waist (in)</label><input type="number" id="u-wa" inputmode="decimal"/></div>
+  <div class="mf"><label>Thighs (in)</label><input type="number" id="u-th" inputmode="decimal"/></div>
+  <div class="mf"><label>Biceps (in)</label><input type="number" id="u-bi" inputmode="decimal"/></div>
+  <button class="ms" id="msave" onclick="saveM()">SAVE</button>
+  <button class="mc-x" onclick="closeM()">Cancel</button>
+</div></div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   DATA STORE
+═══════════════════════════════════════════════════ */
+function gd(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
+function sd(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+var USERS = gd("fp_users")||{};
+var CU = gd("fp_cu")||null; // current username
+var U = null; // current user object
+
+function uKey(k){return "fp_"+CU+"_"+k;}
+function uGet(k){return gd(uKey(k));}
+function uSet(k,v){sd(uKey(k),v);}
+
+/* ═══════════════════════════════════════════════════
+   BMI & PERSONALIZATION
+═══════════════════════════════════════════════════ */
+function calcBMI(wt,ht){return (wt/((ht/100)*(ht/100))).toFixed(1);}
+function bmiCat(b){
+  if(b<18.5)return{cat:"Underweight",c:"#60A5FA",ic:"🪶",d:"Focus on gaining healthy muscle mass with strength training and high-protein diet."};
+  if(b<25)return{cat:"Normal Weight",c:"#4ADE80",ic:"✅",d:"Maintain and build an athletic body with balanced training."};
+  if(b<30)return{cat:"Overweight",c:"#FBBF24",ic:"⚠️",d:"Fat loss priority with cardio + strength combo. You can do this!"};
+  return{cat:"Obese",c:"#F87171",ic:"🎯",d:"Start with low-impact cardio and bodyweight. Gradual progress is the key."};
+}
+function calcBMR(u){
+  // Mifflin-St Jeor
+  if(u.gender==="M")return Math.round(10*u.weight+6.25*u.height-5*u.age+5);
+  return Math.round(10*u.weight+6.25*u.height-5*u.age-161);
+}
+function calcTDEE(u){return Math.round(calcBMR(u)*1.375);} // moderate activity
+function calcCalTarget(u){
+  var tdee=calcTDEE(u);
+  if(u.goal==="lose")return tdee-500;
+  if(u.goal==="gain")return tdee+300;
+  return tdee;
+}
+function calcMacros(cal,goal){
+  if(goal==="lose")return{p:Math.round(cal*.35/4),c:Math.round(cal*.35/4),f:Math.round(cal*.30/9)};
+  if(goal==="gain")return{p:Math.round(cal*.30/4),c:Math.round(cal*.45/4),f:Math.round(cal*.25/9)};
+  return{p:Math.round(cal*.30/4),c:Math.round(cal*.40/4),f:Math.round(cal*.30/9)};
+}
+function waterTarget(u){return(u.weight*0.033).toFixed(1);}
+
+/* ═══════════════════════════════════════════════════
+   WORKOUT TEMPLATES (per BMI category + gender)
+═══════════════════════════════════════════════════ */
+var WO_TEMPLATES = {
+  // Overweight/Obese - fat loss focus
+  fat:{
+    0:{n:"Active Recovery",em:"🧘",fc:"Stretch & Breathe",c:"#6EE7B7",d:"40 min",eq:["Yoga Mat","Cycle"],tg:"Low intensity today. Breathe deep, stretch fully. Recovery is progress.",ex:[{id:"fr0",n:"Light Cycling",s:1,r:"20 min",yt:"",m:"Cardio",t:true,sec:1200},{id:"fr1",n:"Cat-Cow Stretch",s:3,r:"10 reps",yt:"kqnua4rHVVA",m:"Spine"},{id:"fr2",n:"Child's Pose",s:3,r:"45 sec",yt:"eqVMAPM00DM",m:"Back",t:true,sec:45},{id:"fr3",n:"Hip Circles",s:2,r:"10 each",yt:"YQmpIO8RsN8",m:"Hips"}],nk:[{id:"frn0",n:"Neck Rotations",r:"10 each way",yt:"gqDRM4bHUIg",m:"Neck"},{id:"frn1",n:"Chin Tucks",r:"15 reps",yt:"pKHGD3rGzPk",m:"Neck/Jaw"}]},
+    1:{n:"Chest & Shoulders",em:"💪",fc:"Push Power",c:"#F87171",d:"50 min",eq:["Pushup Bar","Dumbbells","Bands"],tg:"4 chest sets. 2 sec negative. Build that 54 inch chest!",ex:[{id:"f10",n:"Wide Grip Pushup",s:3,r:"12 reps",yt:"IODxDxX7oi4",m:"Chest"},{id:"f11",n:"Dumbbell Floor Press",s:3,r:"10 reps",yt:"I9T1P0Sfxco",m:"Chest"},{id:"f12",n:"Dumbbell Shoulder Press",s:3,r:"12 reps",yt:"B-aVuyhvLHU",m:"Shoulders"},{id:"f13",n:"Lateral Raise",s:3,r:"15 reps",yt:"3VcKaXpzqRo",m:"Side Delt"},{id:"f14",n:"Band Chest Flyes",s:3,r:"15 reps",yt:"Kj_XZQP7ypU",m:"Chest"}],nk:[{id:"f1n0",n:"Neck Resistance Push",r:"10 each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"f1n1",n:"Cheekbone Lift",r:"10 sec × 10",yt:"",m:"Face"}]},
+    2:{n:"Back & Biceps",em:"🏋️",fc:"Pull Strength",c:"#60A5FA",d:"50 min",eq:["Barbell","Dumbbells","Bands"],tg:"Squeeze the back at top of every row. Feel it working.",ex:[{id:"f20",n:"Bent-Over Row",s:4,r:"10 reps",yt:"9efgcAjQe7E",m:"Upper Back"},{id:"f21",n:"Dumbbell Bicep Curl",s:3,r:"12 reps",yt:"ykJmrZ5v0Oo",m:"Biceps"},{id:"f22",n:"Band Pull-Apart",s:3,r:"20 reps",yt:"KJSa3ENzfAY",m:"Rear Delt"},{id:"f23",n:"Hammer Curl",s:3,r:"12 reps",yt:"zC3nLlEvin4",m:"Biceps"},{id:"f24",n:"Deadlift (Light)",s:3,r:"10 reps",yt:"op9kVnSso6Q",m:"Lower Back"}],nk:[{id:"f2n0",n:"Neck Side Tilts",r:"10 each 3s hold",yt:"gqDRM4bHUIg",m:"Neck"},{id:"f2n1",n:"Forehead Raise",r:"15 reps",yt:"",m:"Forehead"}]},
+    3:{n:"Legs & Core",em:"🦵",fc:"Leg Day",c:"#FBBF24",d:"55 min",eq:["Barbell","Dumbbells","Cycle"],tg:"Legs burn the most calories. Give it 100% today — this is your biggest fat burner.",ex:[{id:"f30",n:"Barbell Squat",s:4,r:"12 reps",yt:"Dy28eq2PjpM",m:"Quads"},{id:"f31",n:"Walking Lunges",s:3,r:"12 each",yt:"QOVaHwm-Q6U",m:"Legs"},{id:"f32",n:"Goblet Squat",s:3,r:"15 reps",yt:"MxsFDJRrmr8",m:"Quads"},{id:"f33",n:"Calf Raises",s:3,r:"20 reps",yt:"gwLzBkvS11Y",m:"Calves"},{id:"f34",n:"Cycling",s:1,r:"20 min",yt:"",m:"Cardio",t:true,sec:1200}],nk:[{id:"f3n0",n:"Neck Stretches",r:"30 sec each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"f3n1",n:"Eye Circles",r:"30 sec",yt:"",m:"Eyes"}]},
+    4:{n:"ABS BLAST",em:"🔥",fc:"Flat Stomach",c:"#A78BFA",d:"50 min",eq:["Jump Rope","Yoga Mat","Cycle"],tg:"Jump rope melts belly fat FAST. Every minute counts for that 32 inch waist target!",ex:[{id:"f40",n:"Jump Rope",s:5,r:"3 min",yt:"_k8B37bQH4k",m:"Cardio",t:true,sec:180},{id:"f41",n:"Plank Hold",s:4,r:"30 sec",yt:"ASdvN_XEl_c",m:"Core",t:true,sec:30},{id:"f42",n:"Leg Raises",s:4,r:"15 reps",yt:"JB2oyawG9KQ",m:"Lower Abs"},{id:"f43",n:"Russian Twist",s:3,r:"20 reps",yt:"wkD8rjkodUI",m:"Obliques"},{id:"f44",n:"Bicycle Crunches",s:3,r:"20 reps",yt:"1we3bh9uhqY",m:"Abs"},{id:"f45",n:"Cycling Fat Burn",s:1,r:"20 min",yt:"",m:"Cardio",t:true,sec:1200}],nk:[{id:"f4n0",n:"Tongue Press",r:"10 sec × 10",yt:"",m:"Jaw/Neck"},{id:"f4n1",n:"Chin Tucks",r:"15 reps",yt:"pKHGD3rGzPk",m:"Neck"}]},
+    5:{n:"Full Body HIIT",em:"⚡",fc:"Fat Burn Day",c:"#FB923C",d:"55 min",eq:["Jump Rope","Kettlebell","Barbell"],tg:"Compound lifts + cardio = maximum calorie burn. No stopping between rounds!",ex:[{id:"f50",n:"Jump Rope Warm-up",s:1,r:"5 min",yt:"_k8B37bQH4k",m:"Cardio",t:true,sec:300},{id:"f51",n:"Barbell Deadlift",s:4,r:"8 reps",yt:"op9kVnSso6Q",m:"Full Body"},{id:"f52",n:"Kettlebell Swings",s:4,r:"15 reps",yt:"YSxHifyI6s8",m:"Full Body"},{id:"f53",n:"Burpees",s:3,r:"10 reps",yt:"dZgVxmf6jkA",m:"Full Body"},{id:"f54",n:"High Knees",s:3,r:"30 sec",yt:"ZZZoCNMU48U",m:"Cardio",t:true,sec:30}],nk:[{id:"f5n0",n:"Neck Isometric",r:"10 sec each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"f5n1",n:"Jaw Clenches",r:"15 reps",yt:"",m:"Jaw"}]},
+    6:{n:"HIIT Cardio",em:"🚀",fc:"Max Burn",c:"#34D399",d:"45 min",eq:["Jump Rope","Cycle"],tg:"Max heart rate. No rest between sets. This is the day you shed the most fat.",ex:[{id:"f60",n:"Jump Rope HIIT",s:6,r:"3 min",yt:"_k8B37bQH4k",m:"Full Cardio",t:true,sec:180},{id:"f61",n:"Sprint Cycling",s:4,r:"5 min",yt:"",m:"Cardio",t:true,sec:300},{id:"f62",n:"Mountain Climbers",s:3,r:"30 sec",yt:"nmwgirgXLYM",m:"Core",t:true,sec:30}],nk:[{id:"f6n0",n:"Ear-Shoulder Hold",r:"20 sec each",yt:"gqDRM4bHUIg",m:"Neck"},{id:"f6n1",n:"Face Lymph Drain",r:"2 min",yt:"",m:"Face"}]}
+  },
+  // Normal / Athletic
+  normal:{
+    0:{n:"Yoga & Recovery",em:"🧘",fc:"Rest Day",c:"#6EE7B7",d:"40 min",eq:["Yoga Mat","Bands"],tg:"Full recovery. Mobility and breath work. Your muscles grow during rest.",ex:[{id:"n00",n:"Cat-Cow",s:3,r:"10 reps",yt:"kqnua4rHVVA",m:"Spine"},{id:"n01",n:"Downward Dog",s:3,r:"45 sec",yt:"4pKly2JojMw",m:"Full Body",t:true,sec:45},{id:"n02",n:"Pigeon Pose",s:2,r:"60 sec each",yt:"B8p0ADv7Kj4",m:"Hips",t:true,sec:60},{id:"n03",n:"Seated Straddle",s:3,r:"60 sec",yt:"aDvRlCTJRbE",m:"Adductors",t:true,sec:60}],nk:[{id:"n0n0",n:"Neck Full Rotations",r:"10 each way",yt:"gqDRM4bHUIg",m:"Neck"},{id:"n0n1",n:"Chin Tucks",r:"15 reps",yt:"pKHGD3rGzPk",m:"Neck/Jaw"}]},
+    1:{n:"Chest & Shoulders",em:"💪",fc:"Push Power",c:"#F87171",d:"55 min",eq:["Pushup Bar","Dumbbells","Bands"],tg:"Control every rep. Build chest from 50 to 54 inches. Quality over speed.",ex:[{id:"n10",n:"Wide Grip Pushup Bar",s:4,r:"15 reps",yt:"IODxDxX7oi4",m:"Chest"},{id:"n11",n:"Dumbbell Floor Press",s:4,r:"12 reps",yt:"I9T1P0Sfxco",m:"Chest"},{id:"n12",n:"Shoulder Press",s:3,r:"12 reps",yt:"B-aVuyhvLHU",m:"Shoulders"},{id:"n13",n:"Lateral Raise",s:3,r:"15 reps",yt:"3VcKaXpzqRo",m:"Side Delt"},{id:"n14",n:"Band Flyes",s:3,r:"15 reps",yt:"Kj_XZQP7ypU",m:"Chest"},{id:"n15",n:"Diamond Pushup",s:3,r:"12 reps",yt:"J0DXBSpghaI",m:"Triceps"}],nk:[{id:"n1n0",n:"Neck Resistance Push",r:"10 each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"n1n1",n:"Cheekbone Lift",r:"10 sec × 10",yt:"",m:"Face"}]},
+    2:{n:"Back & Biceps",em:"🏋️",fc:"Pull Strength",c:"#60A5FA",d:"55 min",eq:["Barbell","Dumbbells","Kettlebell"],tg:"Biceps from 14 to 17 inches. Squeeze at the peak of every curl.",ex:[{id:"n20",n:"Barbell Row",s:4,r:"10 reps",yt:"9efgcAjQe7E",m:"Upper Back"},{id:"n21",n:"Bicep Curl",s:4,r:"12 reps",yt:"ykJmrZ5v0Oo",m:"Biceps"},{id:"n22",n:"Kettlebell Swing",s:3,r:"15 reps",yt:"YSxHifyI6s8",m:"Back"},{id:"n23",n:"Band Pull-Apart",s:3,r:"20 reps",yt:"KJSa3ENzfAY",m:"Rear Delt"},{id:"n24",n:"Hammer Curl",s:3,r:"12 reps",yt:"zC3nLlEvin4",m:"Biceps"},{id:"n25",n:"Deadlift",s:3,r:"10 reps",yt:"op9kVnSso6Q",m:"Lower Back"}],nk:[{id:"n2n0",n:"Neck Side Tilts",r:"10 each 3s",yt:"gqDRM4bHUIg",m:"Neck"},{id:"n2n1",n:"Forehead Raise",r:"15 reps",yt:"",m:"Forehead"}]},
+    3:{n:"Legs & Glutes",em:"🦵",fc:"Leg Day",c:"#FBBF24",d:"60 min",eq:["Barbell","Dumbbells","Bands","Cycle"],tg:"Legs are already strong. Now build definition. 75% of max weight today.",ex:[{id:"n30",n:"Barbell Squat",s:4,r:"12 reps",yt:"Dy28eq2PjpM",m:"Quads"},{id:"n31",n:"Walking Lunges",s:3,r:"12 each",yt:"QOVaHwm-Q6U",m:"Legs"},{id:"n32",n:"Goblet Squat",s:3,r:"15 reps",yt:"MxsFDJRrmr8",m:"Quads"},{id:"n33",n:"Glute Bridge",s:4,r:"15 reps",yt:"wPM8icPu6H8",m:"Glutes"},{id:"n34",n:"Calf Raises",s:3,r:"20 reps",yt:"gwLzBkvS11Y",m:"Calves"},{id:"n35",n:"Cycling",s:1,r:"20 min",yt:"",m:"Cardio",t:true,sec:1200}],nk:[{id:"n3n0",n:"Neck All Directions",r:"30 sec each",yt:"gqDRM4bHUIg",m:"Neck"},{id:"n3n1",n:"Eye Circles",r:"30 sec",yt:"",m:"Eyes"}]},
+    4:{n:"ABS & Core",em:"🔥",fc:"Core Power",c:"#A78BFA",d:"50 min",eq:["Jump Rope","Yoga Mat","Dumbbells"],tg:"Strong core = better performance in every other lift. Waist goal: 32 inches!",ex:[{id:"n40",n:"Jump Rope",s:3,r:"3 min",yt:"_k8B37bQH4k",m:"Cardio",t:true,sec:180},{id:"n41",n:"Plank Hold",s:4,r:"45 sec",yt:"ASdvN_XEl_c",m:"Core",t:true,sec:45},{id:"n42",n:"Leg Raises",s:4,r:"15 reps",yt:"JB2oyawG9KQ",m:"Lower Abs"},{id:"n43",n:"Russian Twist",s:3,r:"20 reps",yt:"wkD8rjkodUI",m:"Obliques"},{id:"n44",n:"Bicycle Crunches",s:3,r:"25 reps",yt:"1we3bh9uhqY",m:"Abs"},{id:"n45",n:"V-Ups",s:3,r:"12 reps",yt:"iP2fjvG0g3w",m:"Full Abs"}],nk:[{id:"n4n0",n:"Tongue Press",r:"10 sec × 10",yt:"",m:"Jaw"},{id:"n4n1",n:"Chin Tucks",r:"15 reps",yt:"pKHGD3rGzPk",m:"Neck"}]},
+    5:{n:"Full Body Power",em:"⚡",fc:"Strength Day",c:"#FB923C",d:"60 min",eq:["Barbell","Kettlebell","Pushup Bar"],tg:"Compound lifts. Total body. Athletic frame comes from compound movements.",ex:[{id:"n50",n:"Barbell Deadlift",s:4,r:"8 reps",yt:"op9kVnSso6Q",m:"Full Body"},{id:"n51",n:"KB Clean & Press",s:3,r:"8 each",yt:"vs4pFGo1KYo",m:"Shoulders"},{id:"n52",n:"Pushup Bar Dips",s:4,r:"12 reps",yt:"0326dy_-CzM",m:"Chest/Triceps"},{id:"n53",n:"Front Squat",s:3,r:"10 reps",yt:"m4ytaCJZplE",m:"Quads"},{id:"n54",n:"KB Swing",s:3,r:"20 reps",yt:"YSxHifyI6s8",m:"Chain"}],nk:[{id:"n5n0",n:"Neck Isometric",r:"10 sec each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"n5n1",n:"Jaw Clenches",r:"15 reps",yt:"",m:"Jaw"}]},
+    6:{n:"HIIT Cardio",em:"🚀",fc:"Burn Day",c:"#34D399",d:"50 min",eq:["Jump Rope","Cycle","Kettlebell"],tg:"Max heart rate. Athletic conditioning. This is what separates good from great.",ex:[{id:"n60",n:"Jump Rope HIIT",s:5,r:"3 min",yt:"_k8B37bQH4k",m:"Cardio",t:true,sec:180},{id:"n61",n:"Kettlebell Swings",s:4,r:"15 reps",yt:"YSxHifyI6s8",m:"Full Body"},{id:"n62",n:"Burpees",s:3,r:"10 reps",yt:"dZgVxmf6jkA",m:"Full Body"},{id:"n63",n:"Sprint Cycling",s:4,r:"5 min",yt:"",m:"Cardio",t:true,sec:300}],nk:[{id:"n6n0",n:"Ear-Shoulder Hold",r:"20 sec each",yt:"gqDRM4bHUIg",m:"Neck"},{id:"n6n1",n:"Lymph Drain",r:"2 min",yt:"",m:"Face"}]}
+  },
+  // Underweight - muscle building
+  build:{
+    0:{n:"Rest & Stretch",em:"🧘",fc:"Recovery",c:"#6EE7B7",d:"30 min",eq:["Yoga Mat"],tg:"Rest is when muscle grows. Sleep 8 hrs, eat well, stretch.",ex:[{id:"b00",n:"Light Walk",s:1,r:"20 min",yt:"",m:"Cardio",t:true,sec:1200},{id:"b01",n:"Full Body Stretch",s:1,r:"10 min",yt:"kqnua4rHVVA",m:"Full Body"}],nk:[{id:"b0n0",n:"Neck Rotations",r:"10 each way",yt:"gqDRM4bHUIg",m:"Neck"},{id:"b0n1",n:"Chin Tucks",r:"10 reps",yt:"pKHGD3rGzPk",m:"Neck"}]},
+    1:{n:"Heavy Chest & Triceps",em:"💪",fc:"Push Heavy",c:"#F87171",d:"60 min",eq:["Barbell","Pushup Bar","Dumbbells"],tg:"Progressive overload is your best friend. Add weight every week. Eat big to grow big.",ex:[{id:"b10",n:"Barbell Bench Press",s:5,r:"6-8 reps",yt:"vthMCtgVtFw",m:"Chest"},{id:"b11",n:"Incline Dumbbell Press",s:4,r:"8-10 reps",yt:"I9T1P0Sfxco",m:"Upper Chest"},{id:"b12",n:"Pushup Bar Wide",s:3,r:"15 reps",yt:"IODxDxX7oi4",m:"Chest"},{id:"b13",n:"Overhead Tricep Ext",s:4,r:"10 reps",yt:"YbX7Wd8jQ-Q",m:"Triceps"},{id:"b14",n:"Tricep Dips",s:3,r:"12 reps",yt:"0326dy_-CzM",m:"Triceps"}],nk:[{id:"b1n0",n:"Neck Resistance",r:"10 each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"b1n1",n:"Jaw Clenches",r:"20 reps",yt:"",m:"Jaw/Masseter"}]},
+    2:{n:"Heavy Back & Biceps",em:"🏋️",fc:"Pull Heavy",c:"#60A5FA",d:"60 min",eq:["Barbell","Dumbbells","Bands"],tg:"Heavy compound pulls build thickness. Deadlifts are your best back exercise.",ex:[{id:"b20",n:"Barbell Deadlift",s:5,r:"5 reps",yt:"op9kVnSso6Q",m:"Full Back"},{id:"b21",n:"Barbell Row",s:4,r:"8 reps",yt:"9efgcAjQe7E",m:"Upper Back"},{id:"b22",n:"Bicep Curl (Heavy)",s:4,r:"8-10 reps",yt:"ykJmrZ5v0Oo",m:"Biceps"},{id:"b23",n:"Hammer Curl",s:3,r:"10 reps",yt:"zC3nLlEvin4",m:"Biceps"},{id:"b24",n:"Face Pull Bands",s:3,r:"15 reps",yt:"KJSa3ENzfAY",m:"Rear Delt"}],nk:[{id:"b2n0",n:"Neck Side Tilts",r:"10 each 3s",yt:"gqDRM4bHUIg",m:"Neck"},{id:"b2n1",n:"Forehead Raise",r:"15 reps",yt:"",m:"Forehead"}]},
+    3:{n:"Heavy Legs",em:"🦵",fc:"Leg Mass",c:"#FBBF24",d:"65 min",eq:["Barbell","Dumbbells"],tg:"Squats and deadlifts release the most testosterone. Leg day = full body growth.",ex:[{id:"b30",n:"Barbell Squat (Heavy)",s:5,r:"6-8 reps",yt:"Dy28eq2PjpM",m:"Quads"},{id:"b31",n:"Romanian Deadlift",s:4,r:"8 reps",yt:"op9kVnSso6Q",m:"Hamstrings"},{id:"b32",n:"Walking Lunges",s:3,r:"10 each",yt:"QOVaHwm-Q6U",m:"Legs"},{id:"b33",n:"Calf Raises (Heavy)",s:4,r:"15 reps",yt:"gwLzBkvS11Y",m:"Calves"}],nk:[{id:"b3n0",n:"Neck All Directions",r:"30 sec each",yt:"gqDRM4bHUIg",m:"Neck"},{id:"b3n1",n:"Eye Circles",r:"30 sec",yt:"",m:"Eyes"}]},
+    4:{n:"Core & Conditioning",em:"🔥",fc:"Core Day",c:"#A78BFA",d:"45 min",eq:["Yoga Mat","Dumbbells"],tg:"Core strength makes every lift better. Build that solid foundation.",ex:[{id:"b40",n:"Weighted Plank",s:3,r:"60 sec",yt:"ASdvN_XEl_c",m:"Core",t:true,sec:60},{id:"b41",n:"Dumbbell Russian Twist",s:4,r:"20 reps",yt:"wkD8rjkodUI",m:"Obliques"},{id:"b42",n:"Leg Raises",s:4,r:"15 reps",yt:"JB2oyawG9KQ",m:"Lower Abs"},{id:"b43",n:"V-Ups",s:3,r:"15 reps",yt:"iP2fjvG0g3w",m:"Full Abs"}],nk:[{id:"b4n0",n:"Tongue Press",r:"10 sec × 10",yt:"",m:"Jaw"},{id:"b4n1",n:"Chin Tucks",r:"15 reps",yt:"pKHGD3rGzPk",m:"Neck"}]},
+    5:{n:"Shoulders & Arms",em:"⚡",fc:"Detail Day",c:"#FB923C",d:"55 min",eq:["Barbell","Dumbbells","Bands"],tg:"Shoulder width = that V-taper. Arnold press + laterals for full 3D shoulders.",ex:[{id:"b50",n:"Barbell OHP",s:4,r:"8 reps",yt:"B-aVuyhvLHU",m:"Shoulders"},{id:"b51",n:"Arnold Press",s:3,r:"10 reps",yt:"B-aVuyhvLHU",m:"Shoulders"},{id:"b52",n:"Lateral Raise",s:4,r:"15 reps",yt:"3VcKaXpzqRo",m:"Side Delt"},{id:"b53",n:"Barbell Curl",s:4,r:"8 reps",yt:"ykJmrZ5v0Oo",m:"Biceps"},{id:"b54",n:"Tricep Pushdown",s:3,r:"12 reps",yt:"6SS6K3lAwZ8",m:"Triceps"}],nk:[{id:"b5n0",n:"Neck Isometric",r:"10 sec each dir",yt:"gqDRM4bHUIg",m:"Neck"},{id:"b5n1",n:"Jaw Clenches",r:"15 reps",yt:"",m:"Jaw"}]},
+    6:{n:"Light Cardio",em:"🚀",fc:"Active Day",c:"#34D399",d:"30 min",eq:["Cycle","Jump Rope"],tg:"Light cardio only. Don't burn too many calories — you need them for muscle growth.",ex:[{id:"b60",n:"Easy Cycling",s:1,r:"20 min",yt:"",m:"Cardio",t:true,sec:1200},{id:"b61",n:"Jump Rope Easy",s:3,r:"2 min",yt:"_k8B37bQH4k",m:"Cardio",t:true,sec:120}],nk:[{id:"b6n0",n:"Ear-Shoulder Hold",r:"20 sec each",yt:"gqDRM4bHUIg",m:"Neck"},{id:"b6n1",n:"Lymph Drain",r:"2 min",yt:"",m:"Face"}]}
+  }
+};
+
+/* ═══════════════════════════════════════════════════
+   FOOD DATA
+═══════════════════════════════════════════════════ */
+var FOODS = {
+  lose:{
+    breakfast:[
+      {ic:"🥚",n:"Boiled Eggs (3)",d:"High protein, low calorie start",cal:210,p:"18g protein"},
+      {ic:"🍌",n:"Banana (1 medium)",d:"Natural energy, potassium",cal:90,p:"+ 1 banana"},
+      {ic:"🥛",n:"Skimmed Milk (200ml)",d:"Calcium + protein",cal:70,p:"or black tea"},
+    ],
+    lunch:[
+      {ic:"🍗",n:"Grilled Chicken (150g)",d:"Lean protein, zero fat",cal:248,p:"37g protein"},
+      {ic:"🥗",n:"Mixed Salad",d:"Cucumber, tomato, onion, lemon",cal:50,p:"unlimited greens"},
+      {ic:"🍚",n:"Brown Rice (1 cup cooked)",d:"Complex carbs, fiber",cal:220,p:"or 2 chapati"},
+      {ic:"🫘",n:"Dal / Lentils (1 bowl)",d:"Plant protein + fiber",cal:150,p:"moong or masoor"},
+    ],
+    snack:[
+      {ic:"🥜",n:"Almonds (15-20)",d:"Healthy fats, keeps you full",cal:120,p:"handful only"},
+      {ic:"🍊",n:"Orange or Apple",d:"Vitamin C, fiber, low cal",cal:60,p:"1 medium fruit"},
+    ],
+    dinner:[
+      {ic:"🐟",n:"Fish / Paneer (100g)",d:"Lean protein for muscle recovery",cal:180,p:"or 100g paneer"},
+      {ic:"🥦",n:"Stir-fried Veggies",d:"Broccoli, capsicum, beans",cal:80,p:"2 cups, any veg"},
+      {ic:"🫓",n:"1-2 Chapati (whole wheat)",d:"Light dinner = better fat loss",cal:140,p:"avoid rice at night"},
+    ],
+    avoid:["❌ Maida / White bread / Biscuits","❌ Fried foods — samosa, pakora, puri","❌ Cold drinks, juices with sugar","❌ White rice at dinner","❌ Alcohol","❌ Sweets — mithai, chocolate, ice cream","❌ Chips and namkeen","❌ Heavy dal makhani, butter naan at night"]
+  },
+  gain:{
+    breakfast:[
+      {ic:"🥚",n:"Eggs (4-5 whole)",d:"Protein + healthy fats to grow",cal:350,p:"25g protein"},
+      {ic:"🍌",n:"Banana (2)",d:"Energy + potassium pre-workout",cal:180,p:"or mango"},
+      {ic:"🥛",n:"Full-fat Milk (300ml)",d:"Calories + calcium + protein",cal:180,p:"or banana shake"},
+      {ic:"🫓",n:"Paratha (2) with ghee",d:"Calorie-dense healthy fats",cal:280,p:"or poha with nuts"},
+    ],
+    lunch:[
+      {ic:"🍗",n:"Chicken / Mutton (200g)",d:"Heavy protein for muscle building",cal:400,p:"48g protein"},
+      {ic:"🍚",n:"Rice (2 cups cooked)",d:"Carbs = energy = muscle fuel",cal:440,p:"or 4 chapati"},
+      {ic:"🫘",n:"Dal + Rajma combined",d:"Max plant protein",cal:250,p:"2 bowls"},
+      {ic:"🧀",n:"Paneer (100g) with meal",d:"Cottage cheese = muscle builder",cal:265,p:"18g protein"},
+    ],
+    snack:[
+      {ic:"🥜",n:"Peanut Butter (2 tbsp) + Roti",d:"Calorie-dense, healthy fats",cal:230,p:"8g protein"},
+      {ic:"🍌",n:"Banana Protein Shake",d:"Milk + banana + peanut butter",cal:380,p:"20g protein"},
+    ],
+    dinner:[
+      {ic:"🐟",n:"Fish / Chicken (150g)",d:"Protein before sleep = muscle growth",cal:280,p:"35g protein"},
+      {ic:"🍚",n:"Rice (1.5 cups) or 3 Chapati",d:"Moderate carbs at dinner",cal:330,p:"+ sabzi"},
+      {ic:"🥛",n:"Milk before bed (250ml)",d:"Casein protein = overnight growth",cal:150,p:"warm preferred"},
+    ],
+    avoid:["❌ Skip meals — never miss food","❌ Only cardio without lifting","❌ Too much junk food calories","❌ Coffee on empty stomach","❌ Very spicy food before workout","❌ Alcohol — kills testosterone"]
+  },
+  maintain:{
+    breakfast:[
+      {ic:"🥚",n:"Eggs (3) + Toast (2)",d:"Balanced protein + carbs",cal:280,p:"21g protein"},
+      {ic:"🍊",n:"Fresh Fruit (1-2)",d:"Vitamins, minerals, fiber",cal:80,p:"any seasonal fruit"},
+      {ic:"🥛",n:"Milk (200ml) or Curd",d:"Calcium + probiotics",cal:120,p:"low-fat preferred"},
+    ],
+    lunch:[
+      {ic:"🍗",n:"Chicken or Dal (150g)",d:"Quality protein midday",cal:300,p:"30g protein"},
+      {ic:"🍚",n:"Rice (1 cup) or 2-3 Chapati",d:"Energy for the afternoon",cal:280,p:"balanced portion"},
+      {ic:"🥗",n:"Salad + Raita",d:"Fiber + probiotics",cal:80,p:"every lunch"},
+    ],
+    snack:[
+      {ic:"🥜",n:"Mixed Nuts (25g)",d:"Healthy fats + energy",cal:140,p:"handful"},
+      {ic:"☕",n:"Black Tea / Coffee",d:"Zero calorie, energy boost",cal:5,p:"no sugar"},
+    ],
+    dinner:[
+      {ic:"🐟",n:"Fish / Paneer / Chicken",d:"Protein for muscle maintenance",cal:250,p:"100-150g"},
+      {ic:"🥦",n:"Sabzi (2 types)",d:"Vitamins + minerals",cal:100,p:"any vegetables"},
+      {ic:"🫓",n:"2 Chapati",d:"Light on carbs at dinner",cal:140,p:"whole wheat"},
+    ],
+    avoid:["❌ Overeating at any single meal","❌ Skipping breakfast","❌ Too much oil/ghee","❌ Late night heavy meals","❌ Sugary drinks daily","❌ Processed / packaged foods regularly"]
+  }
+};
+
+/* ═══════════════════════════════════════════════════
+   AUTH FLOW
+═══════════════════════════════════════════════════ */
+function authTab(t){
+  document.querySelectorAll(".auth-tab").forEach(function(el,i){el.classList.toggle("act",i===(t==="login"?0:1));});
+  document.getElementById("auth-login").style.display=t==="login"?"block":"none";
+  document.getElementById("auth-reg").style.display=t==="reg"?"block":"none";
+}
+function doLogin(){
+  var u=document.getElementById("lg-user").value.trim().toLowerCase();
+  if(!u||!USERS[u]){document.getElementById("lg-err").style.display="block";return;}
+  document.getElementById("lg-err").style.display="none";
+  CU=u;U=USERS[u];sd("fp_cu",CU);
+  launchApp();
+}
+function doRegStep1(){
+  var nm=document.getElementById("rg-name").value.trim();
+  var un=document.getElementById("rg-user").value.trim().toLowerCase();
+  if(!nm||!un){return;}
+  if(USERS[un]){document.getElementById("rg-err").style.display="block";return;}
+  document.getElementById("rg-err").style.display="none";
+  // store temp
+  CU=un;
+  USERS[un]={name:nm,username:un,gender:"",age:0,height:0,weight:0,goal:"",joined:new Date().toDateString()};
+  startOnboard(nm,un);
+}
+
+/* ═══════════════════════════════════════════════════
+   ONBOARDING
+═══════════════════════════════════════════════════ */
+var OB_STEP=0;var OB_DATA={};var OB_TOTAL=5;
+var OB_STEPS_CFG=[
+  {title:"Your Gender",sub:"Select your gender to personalize your workout plan.",ico:"👤",type:"gender"},
+  {title:"Your Age",sub:"Your age helps us set the right intensity for you.",ico:"🎂",type:"age"},
+  {title:"Your Height & Weight",sub:"We'll calculate your BMI and design the perfect plan.",ico:"📏",type:"hw"},
+  {title:"Your Goal",sub:"What do you want to achieve? We'll build your entire plan around this.",ico:"🎯",type:"goal"},
+  {title:"Your BMI Result",sub:"Here's your personalized assessment.",ico:"📊",type:"result"},
+];
+
+function startOnboard(nm,un){
+  OB_STEP=0;OB_DATA={name:nm,username:un};
+  showScreen("s-onboard");
+  renderObStep();
+}
+
+function renderObStep(){
+  var steps=document.getElementById("ob-steps");
+  steps.innerHTML=OB_STEPS_CFG.map(function(_,i){return'<div class="ob-step'+(i<=OB_STEP?" done":"")+'" ></div>';}).join("");
+  var cfg=OB_STEPS_CFG[OB_STEP];
+  var body=document.getElementById("ob-body");
+  var html='<div class="ob-ico">'+cfg.ico+'</div><div class="ob-ttl">'+cfg.title+'</div><div class="ob-sub">'+cfg.sub+'</div>';
+  if(cfg.type==="gender"){
+    html+='<div class="gen-row">'
+      +'<button class="gen-btn'+(OB_DATA.gender==="M"?" sel":"")+'" onclick="selGender(\'M\')">♂️<br/><span style="font-size:14px;font-weight:700">Male</span></button>'
+      +'<button class="gen-btn'+(OB_DATA.gender==="F"?" sel":"")+'" onclick="selGender(\'F\')">♀️<br/><span style="font-size:14px;font-weight:700">Female</span></button>'
+      +'</div>';
+  } else if(cfg.type==="age"){
+    html+='<div class="inp-grp"><label>Your Age (years)</label><input type="number" id="ob-age" value="'+(OB_DATA.age||"")+'" placeholder="e.g. 35" inputmode="numeric" min="15" max="80"/></div>';
+  } else if(cfg.type==="hw"){
+    html+='<div class="inp-grp"><label>Height (cm)</label><input type="number" id="ob-ht" value="'+(OB_DATA.height||"")+'" placeholder="e.g. 178" inputmode="decimal"/></div>';
+    html+='<div class="inp-grp"><label>Weight (kg)</label><input type="number" id="ob-wt" value="'+(OB_DATA.weight||"")+'" placeholder="e.g. 95" inputmode="decimal"/></div>';
+  } else if(cfg.type==="goal"){
+    html+='<div class="goal-grid">'
+      +'<div class="goal-card'+(OB_DATA.goal==="lose"?" sel":"")+'" onclick="selGoal(\'lose\')"><div class="goal-ico">🔥</div><div class="goal-t">Lose Fat</div><div class="goal-s">Burn fat, get lean</div></div>'
+      +'<div class="goal-card'+(OB_DATA.goal==="maintain"?" sel":"")+'" onclick="selGoal(\'maintain\')"><div class="goal-ico">⚖️</div><div class="goal-t">Get Athletic</div><div class="goal-s">Tone & perform</div></div>'
+      +'<div class="goal-card'+(OB_DATA.goal==="gain"?" sel":"")+'" onclick="selGoal(\'gain\')"><div class="goal-ico">💪</div><div class="goal-t">Build Muscle</div><div class="goal-s">Mass & strength</div></div>'
+      +'<div class="goal-card'+(OB_DATA.goal==="splits"?" sel":"")+'" onclick="selGoal(\'splits\')"><div class="goal-ico">🧘</div><div class="goal-t">Flexibility</div><div class="goal-s">Yoga & splits</div></div>'
+      +'</div>';
+  } else if(cfg.type==="result"){
+    var b=parseFloat(calcBMI(OB_DATA.weight,OB_DATA.height));
+    var bc=bmiCat(b);
+    var calTgt=calcCalTarget({weight:OB_DATA.weight,height:OB_DATA.height,age:OB_DATA.age,gender:OB_DATA.gender,goal:OB_DATA.goal==="splits"?"maintain":OB_DATA.goal});
+    html+='<div class="bmi-result"><div class="bmi-big" style="color:'+bc.c+'">'+b.toFixed(1)+'</div><div class="bmi-cat" style="color:'+bc.c+'">'+bc.ic+' '+bc.cat+'</div><div class="bmi-desc">'+bc.d+'</div></div>';
+    html+='<div style="background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-top:14px;">';
+    html+='<div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:12px">YOUR DAILY PLAN</div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--txt2)">Daily Calories</span><span style="font-weight:700;color:'+bc.c+'">'+calTgt+' kcal</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--txt2)">Water Target</span><span style="font-weight:700;color:#60A5FA">'+(OB_DATA.weight*0.033).toFixed(1)+'L / day</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:var(--txt2)">Training Type</span><span style="font-weight:700;color:var(--acc)">'+(b>=25?"Fat Loss Plan":b<18.5?"Muscle Build Plan":"Athletic Plan")+'</span></div>';
+    html+='</div>';
+    document.getElementById("ob-next").textContent="START MY JOURNEY 🚀";
+  }
+  body.innerHTML=html;
+  document.getElementById("ob-back").style.display=OB_STEP===0?"none":"block";
+}
+
+function selGender(g){OB_DATA.gender=g;renderObStep();}
+function selGoal(g){OB_DATA.goal=g;renderObStep();}
+
+function obNext(){
+  var cfg=OB_STEPS_CFG[OB_STEP];
+  if(cfg.type==="gender"&&!OB_DATA.gender){alert("Please select your gender");return;}
+  if(cfg.type==="age"){var a=parseInt(document.getElementById("ob-age").value);if(!a||a<10||a>90){alert("Enter valid age");return;}OB_DATA.age=a;}
+  if(cfg.type==="hw"){
+    var ht=parseFloat(document.getElementById("ob-ht").value);
+    var wt=parseFloat(document.getElementById("ob-wt").value);
+    if(!ht||!wt){alert("Enter height and weight");return;}
+    OB_DATA.height=ht;OB_DATA.weight=wt;
+  }
+  if(cfg.type==="goal"&&!OB_DATA.goal){alert("Select your goal");return;}
+  if(cfg.type==="result"){
+    // Save user
+    USERS[CU]=Object.assign(USERS[CU]||{},OB_DATA,{
+      chest:50,waist:39,thighs:26,biceps:14,
+      joined:new Date().toDateString(),
+      wtr:[],
+    });
+    sd("fp_users",USERS);U=USERS[CU];
+    launchApp();return;
+  }
+  OB_STEP++;renderObStep();
+}
+function obBack(){if(OB_STEP>0){OB_STEP--;renderObStep();}}
+
+/* ═══════════════════════════════════════════════════
+   APP LAUNCH
+═══════════════════════════════════════════════════ */
+function getWOTemplate(){
+  var b=parseFloat(calcBMI(U.weight,U.height));
+  if(b<18.5)return WO_TEMPLATES.build;
+  if(b<25)return WO_TEMPLATES.normal;
+  return WO_TEMPLATES.fat;
+}
+
+function launchApp(){
+  U=USERS[CU];
+  showScreen("s-app");
+  renderSidebar();
+  navTo("workout");
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+function openSB(){document.getElementById("sidebar").classList.add("open");document.getElementById("sb-overlay").classList.add("show");}
+function closeSB(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("show");}
+function renderSidebar(){
+  var b=parseFloat(calcBMI(U.weight,U.height));
+  var bc=bmiCat(b);
+  var colors=["#F87171","#60A5FA","#FBBF24","#A78BFA","#34D399","#FB923C"];
+  var color=colors[CU.charCodeAt(0)%colors.length];
+  document.getElementById("sb-av").style.background=color+"30";
+  document.getElementById("sb-av").innerHTML='<span style="font-size:28px">'+(U.gender==="F"?"👩":"👨")+'</span>';
+  document.getElementById("sb-nm").textContent=U.name;
+  document.getElementById("sb-un").textContent="@"+U.username;
+  document.getElementById("sb-bmi").textContent="BMI "+b.toFixed(1)+" · "+bc.cat;
+  document.getElementById("sb-bmi").style.background=bc.c+"20";
+  document.getElementById("sb-bmi").style.color=bc.c;
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════ */
+var TITLES={workout:"Gym & Yoga",food:"Food & Nutrition",bodypics:"Body Progress",profile:"Profile",settings:"Settings",help:"Help & Guide"};
+var curPg="workout";
+
+function navTo(pg){
+  closeSB();curPg=pg;
+  document.querySelectorAll(".sb-item").forEach(function(el){el.classList.toggle("act",el.dataset.pg===pg);});
+  document.querySelectorAll(".pg").forEach(function(el){el.classList.remove("act");});
+  document.getElementById("pg-"+pg).classList.add("act");
+  document.getElementById("hdr-ttl").textContent=TITLES[pg];
+  document.getElementById("hdr-prog").style.display=pg==="workout"?"block":"none";
+  if(pg==="workout")renderWorkout();
+  if(pg==="food")renderFood();
+  if(pg==="bodypics"){mOff=0;renderMirror();}
+  if(pg==="profile")renderProfile();
+  if(pg==="settings")renderSettings();
+  document.getElementById("page").scrollTop=0;
+}
+
+/* ═══════════════════════════════════════════════════
+   WORKOUT RENDER
+═══════════════════════════════════════════════════ */
+var today=new Date().getDay();
+var TK=new Date().toDateString();
+
+function sk(id,i){return TK+"_"+CU+"_"+id+"_"+i;}
+function isDone(id,i){return!!(uGet("cs")||{})[sk(id,i)];}
+function toggleSet(eid,i,c){var cs=uGet("cs")||{};cs[sk(eid,i)]=!cs[sk(eid,i)];uSet("cs",cs);renderWorkout();updateHeader();var snd=uGet("settings")||{};if(cs[sk(eid,i)]&&snd.rest!==false)shR(c);}
+function tapNeck(eid){var cs=uGet("cs")||{};cs[sk(eid,0)]=!cs[sk(eid,0)];uSet("cs",cs);renderWorkout();updateHeader();}
+function exDone(ex){var cs=uGet("cs")||{};var d=0;for(var i=0;i<ex.s;i++)if(cs[sk(ex.id,i)])d++;return d;}
+function wT(wo){return wo.ex.reduce(function(a,e){return a+e.s;},0)+wo.nk.length;}
+function wD(wo){var cs=uGet("cs")||{};return wo.ex.reduce(function(a,e){return a+exDone(e);},0)+wo.nk.filter(function(e){return cs[sk(e.id,0)];}).length;}
+
+function streak(){var s=0;var cw=uGet("cw")||{};for(var i=0;i<90;i++){var d=new Date();d.setDate(d.getDate()-i);if(cw[d.toDateString()])s++;else if(i>0)break;}return s;}
+
+function updateHeader(){
+  var wo=getWOTemplate()[today];
+  var c=wo.c,ds=wD(wo),ts=wT(wo),s=streak();
+  document.getElementById("hsk").textContent=s;
+  document.getElementById("hdr-sub").textContent=U.name+" · "+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short",weekday:"long"});
+  document.getElementById("hpt").textContent=ds+"/"+ts+" sets";
+  document.getElementById("hpf").style.width=(ts?ds/ts*100:0)+"%";
+  document.getElementById("hpf").style.background=c;
+}
+
+function renderWorkout(){
+  var wo=getWOTemplate()[today];
+  var c=wo.c,cw=uGet("cw")||{},done=!!cw[TK];
+  // hero
+  var h=document.getElementById("t-hero");
+  h.style.background="linear-gradient(135deg,"+c+"20,"+c+"07)";h.style.border="1px solid "+c+"30";
+  document.getElementById("t-fc").textContent=wo.fc;document.getElementById("t-fc").style.color=c;
+  document.getElementById("t-nm").textContent=wo.n;document.getElementById("t-em").textContent=wo.em;
+  document.getElementById("t-ch").innerHTML=wo.eq.map(function(e){return'<div class="wchip">⚙ '+e+'</div>';}).join('')+'<div class="wchip">⏱ '+wo.d+'</div>';
+  document.getElementById("tbox").style.borderLeftColor=c;
+  document.getElementById("ttxt").textContent=wo.tg;
+  document.getElementById("dban").classList.toggle("show",done);
+  // exercises
+  document.getElementById("exl").innerHTML=wo.ex.map(function(ex){
+    var ed=exDone(ex),pct=ex.s?(ed/ex.s*100):0;
+    var sets="";for(var i=0;i<ex.s;i++){var d=isDone(ex.id,i);sets+='<button class="sb2'+(d?" done":"")+'" style="'+(d?"background:"+c+";border-color:"+c+";":"")+'" onclick="toggleSet(\''+ex.id+'\','+i+',\''+c+'\')">'+(d?"✓":"S"+(i+1))+'</button>';}
+    return'<div class="exc"><div class="xp"><div class="xtop"><div style="flex:1"><span class="tag" style="background:'+c+'20;color:'+c+'">'+ex.m+'</span><div class="xnm">'+ex.n+(ed===ex.s&&ex.s?' ✅':'')+'</div><div class="xmt">'+ex.s+' sets × '+ex.r+'</div></div>'
+      +(ex.yt?'<button class="db" style="color:'+c+'" onclick="openV(\''+ex.yt+'\')">▶ Demo</button>':'')+'</div>'
+      +(ex.s?'<div class="pthin"><div class="ptf" style="width:'+pct+'%;background:'+c+'"></div></div><div class="sw">'+sets+'</div>':'')
+      +(ex.t?'<div class="tmr-r"><button class="tb" style="color:'+c+'" onclick="sXT(\''+ex.id+'\',\''+ex.n+'\','+ex.sec+',\''+c+'\')">⏱ Start Timer ('+ex.r+')</button></div>':'')
+      +'</div></div>';
+  }).join("");
+  // neck
+  document.getElementById("nkl").innerHTML=wo.nk.map(function(ex){
+    var d=isDone(ex.id,0);
+    return'<div class="nkc"><div style="flex:1"><div class="nkn">'+ex.n+'</div><div class="nkm">'+ex.m+' · '+ex.r+'</div></div>'
+      +(ex.yt?'<button class="db" style="color:'+c+';min-width:50px;margin-right:8px" onclick="openV(\''+ex.yt+'\')">▶</button>':'')
+      +'<button class="ck'+(d?" done":"")+'" style="'+(d?"background:"+c+";border-color:"+c+";":"")+'" onclick="tapNeck(\''+ex.id+'\')">'+(d?"✓":"○")+'</button></div>';
+  }).join("");
+  // btn
+  var ds=wD(wo),ts=wT(wo),btn=document.getElementById("cbtn");
+  if(done){btn.style.background="#081C10";btn.style.color="var(--grn)";btn.textContent="🏆 DONE FOR TODAY!";}
+  else if(ds>=ts&&ts>0){btn.style.background=c;btn.style.color="#000";btn.textContent="MARK WORKOUT COMPLETE ✓";}
+  else{btn.style.background=c+"15";btn.style.color=c+"70";btn.textContent="COMPLETE ALL SETS ("+ds+"/"+ts+")";}
+  updateHeader();
+}
+
+function markDone(){
+  var wo=getWOTemplate()[today],cw=uGet("cw")||{};
+  if(!cw[TK]&&wD(wo)>=wT(wo)){cw[TK]=true;uSet("cw",cw);renderWorkout();beep(660,.25);setTimeout(function(){beep(880,.25);},320);}
+}
+
+/* ═══════════════════════════════════════════════════
+   FOOD RENDER
+═══════════════════════════════════════════════════ */
+function renderFood(){
+  var goal=U.goal==="splits"?"maintain":(U.goal||"maintain");
+  var calTgt=calcCalTarget({weight:U.weight,height:U.height,age:U.age,gender:U.gender,goal:goal});
+  var macros=calcMacros(calTgt,goal);
+  var b=parseFloat(calcBMI(U.weight,U.height));
+  var bc=bmiCat(b);
+  var fd=FOODS[goal]||FOODS.maintain;
+  // summary card
+  document.getElementById("food-summary").style.background="linear-gradient(135deg,"+bc.c+"18,"+bc.c+"08)";
+  document.getElementById("food-summary").style.border="1px solid "+bc.c+"30";
+  document.getElementById("food-summary").innerHTML=
+    '<div class="cs-top"><div><div class="cs-ttl">'+calTgt+'<span style="font-size:16px;font-weight:400;color:var(--txt3)"> kcal/day</span></div><div class="cs-sub">For '+bc.cat+' · Goal: '+goal.charAt(0).toUpperCase()+goal.slice(1)+'</div></div><div style="font-size:40px">'+bc.ic+'</div></div>'
+    +'<div class="macro-row">'
+    +'<div class="macro-card"><div class="mc-n" style="color:#F87171">'+macros.p+'g</div><div class="mc-l">Protein</div></div>'
+    +'<div class="macro-card"><div class="mc-n" style="color:#FBBF24">'+macros.c+'g</div><div class="mc-l">Carbs</div></div>'
+    +'<div class="macro-card"><div class="mc-n" style="color:#34D399">'+macros.f+'g</div><div class="mc-l">Fat</div></div>'
+    +'</div>';
+  // meals
+  var meals=[
+    {name:"🌅 Breakfast",key:"breakfast"},
+    {name:"☀️ Lunch",key:"lunch"},
+    {name:"🍎 Snacks",key:"snack"},
+    {name:"🌙 Dinner",key:"dinner"},
+  ];
+  document.getElementById("food-meals").innerHTML=meals.map(function(m){
+    var items=(fd[m.key]||[]).map(function(f){
+      return'<div class="food-card"><div class="food-ico">'+f.ic+'</div><div class="food-info"><div class="food-nm">'+f.n+'</div><div class="food-desc">'+f.d+'<br/><span style="color:'+bc.c+';font-size:12px;font-weight:700">'+f.p+'</span></div></div><div class="food-r"><div class="food-cal" style="color:'+bc.c+'">'+f.cal+'</div><div class="food-unit">kcal</div></div></div>';
+    }).join("");
+    return'<div class="meal-section"><div class="meal-ttl">'+m.name+'</div>'+items+'</div>';
+  }).join("");
+  // water
+  var wl=parseFloat(waterTarget(U));
+  var glasses=Math.round(wl/0.25);
+  var wtr=uGet("wtr")||{};var wtrToday=wtr[TK]||0;
+  var drops="";for(var i=0;i<glasses;i++){drops+='<div class="wdrop'+(i<wtrToday?" filled":"")+'" onclick="tapWater('+i+')">💧</div>';}
+  document.getElementById("wtr-drops").innerHTML=drops;
+  document.getElementById("wtr-lbl").textContent=wtrToday*0.25+" / "+wl.toFixed(1)+"L consumed ("+glasses+" glasses)";
+  // avoid
+  document.getElementById("avoid-foods").innerHTML=(fd.avoid||[]).map(function(a){return'<div style="font-size:14px;color:var(--txt2);padding:6px 0;border-bottom:1px solid var(--bdr)">'+a+'</div>';}).join("");
+}
+
+function tapWater(i){var wtr=uGet("wtr")||{};var wtrToday=wtr[TK]||0;wtr[TK]=i<wtrToday?i:(i+1);uSet("wtr",wtr);renderFood();}
+
+/* ═══════════════════════════════════════════════════
+   BODY PICS
+═══════════════════════════════════════════════════ */
+var mOff=0;
+function mK(o){var d=new Date();d.setDate(d.getDate()+o);return d.toDateString();}
+function fmtD(k){return new Date(k).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});}
+function renderMirror(){
+  var key=mK(mOff),isT=mOff===0;
+  document.getElementById("mdt").textContent=isT?"Today — "+fmtD(key):fmtD(key);
+  var ph=uGet("ph")||{},pd=ph[key]||{};
+  var slots=[{k:"front",l:"Front",ic:"🧍"},{k:"side",l:"Side",ic:"🧍"},{k:"back",l:"Back",ic:"🔙"},{k:"face",l:"Face/Neck",ic:"🫠"}];
+  document.getElementById("pgrid").innerHTML=slots.map(function(sl){
+    var img=pd[sl.k];
+    if(img)return'<div class="ps" onclick="'+(isT?"document.getElementById(\'pf-"+sl.k+"\').click()":"void(0)")+'">'+'<img src="'+img+'"/><div class="pov"><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7)">'+sl.l+'</span></div>'+(isT?'<button class="pdel" onclick="event.stopPropagation();dP(\''+key+'\',\''+sl.k+'\')">✕</button>':'')+'</div>';
+    return'<div class="ps" onclick="'+(isT?"document.getElementById(\'pf-"+sl.k+"\').click()":"void(0)")+'" style="'+(isT?"cursor:pointer":"cursor:default")+'">'+'<div class="ps-ic">'+sl.ic+'</div><div class="ps-lb">'+sl.l+'</div>'+(isT?'<div style="font-size:12px;color:var(--bdr2)">Tap to add</div>':'')+'</div>';
+  }).join("");
+  document.getElementById("nta").value=pd.note||"";
+  var c=getWOTemplate()[today].c;
+  document.getElementById("snbtn").style.background=c;document.getElementById("snbtn").style.color="#000";document.getElementById("snbtn").textContent="SAVE NOTE";
+  // history
+  var keys=Object.keys(ph).sort(function(a,b){return new Date(b)-new Date(a);}).slice(0,15);
+  document.getElementById("hstrip").innerHTML=keys.length?keys.map(function(k){
+    var p=ph[k],th=p.front||p.face||p.side||p.back;if(!th)return"";
+    var o=Math.round((new Date(k)-new Date(TK))/86400000);
+    return'<div class="ht" onclick="mOff='+o+';renderMirror()"><img src="'+th+'"/><div class="ht-d">'+new Date(k).toLocaleDateString("en-IN",{day:"numeric",month:"short"})+'</div></div>';
+  }).join(""):'<div style="color:var(--txt3);font-size:13px;text-align:center;padding:20px;width:100%">No photos yet. Start taking daily progress photos!</div>';
+}
+function hPhoto(ang,inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){var img=new Image();img.onload=function(){var cv=document.createElement("canvas"),mx=650,rt=Math.min(mx/img.width,mx/img.height);cv.width=Math.round(img.width*rt);cv.height=Math.round(img.height*rt);cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);var ph=uGet("ph")||{},k=mK(0);if(!ph[k])ph[k]={};ph[k][ang]=cv.toDataURL("image/jpeg",.65);uSet("ph",ph);renderMirror();};img.src=e.target.result;};r.readAsDataURL(f);inp.value="";}
+function dP(key,ang){var ph=uGet("ph")||{};if(ph[key])delete ph[key][ang];uSet("ph",ph);renderMirror();}
+function saveNote(){var ph=uGet("ph")||{},k=mK(0);if(!ph[k])ph[k]={};ph[k].note=document.getElementById("nta").value;uSet("ph",ph);var b=document.getElementById("snbtn");b.style.background="#081C10";b.style.color="var(--grn)";b.textContent="SAVED ✓";setTimeout(function(){b.style.background=getWOTemplate()[today].c;b.style.color="#000";b.textContent="SAVE NOTE";},2000);}
+function mD(d){if(mOff+d>0)return;mOff+=d;renderMirror();}
+
+/* ═══════════════════════════════════════════════════
+   PROFILE
+═══════════════════════════════════════════════════ */
+function renderProfile(){
+  var b=parseFloat(calcBMI(U.weight,U.height)),bc=bmiCat(b),s=streak(),cw=uGet("cw")||{};
+  var wo=getWOTemplate()[today];
+  document.getElementById("prof-hero").style.background="linear-gradient(135deg,"+bc.c+"18,"+bc.c+"08)";
+  document.getElementById("prof-hero").style.border="1px solid "+bc.c+"30";
+  document.getElementById("prof-hero").innerHTML='<div class="prof-av" style="background:'+bc.c+'20">'+(U.gender==="F"?"👩":"👨")+'</div><div class="prof-nm">'+U.name+'</div><div class="prof-un">@'+U.username+' · '+(U.gender==="M"?"Male":"Female")+'</div><div style="margin-top:10px;display:inline-block;padding:5px 16px;border-radius:20px;background:'+bc.c+'20;color:'+bc.c+';font-size:13px;font-weight:700">'+bc.ic+' BMI '+b.toFixed(1)+' — '+bc.cat+'</div>';
+  var mets=[
+    {ic:"⚖️",v:U.weight+"kg",l:"Weight",c:"#60A5FA"},
+    {ic:"📏",v:U.height+"cm",l:"Height",c:"#34D399"},
+    {ic:"🎂",v:U.age+"yr",l:"Age",c:"#FBBF24"},
+    {ic:(U.gender==="M"?"♂️":"♀️"),v:(U.gender==="M"?"Male":"Female"),l:"Gender",c:"#A78BFA"},
+    {ic:"🎯",v:(U.goal||"lose").charAt(0).toUpperCase()+(U.goal||"lose").slice(1),l:"Goal",c:bc.c},
+    {ic:"🔥",v:s+" days",l:"Streak",c:"#FB923C"},
+    {ic:"🏋️",v:Object.keys(cw).length,l:"Workouts",c:"#F87171"},
+    {ic:"💧",v:waterTarget(U)+"L",l:"Water/Day",c:"#60A5FA"},
+  ];
+  document.getElementById("metrics-grid").innerHTML=mets.map(function(m){
+    return'<div class="metric-card" style="border-color:'+m.c+'25"><div class="metric-ico">'+m.ic+'</div><div class="metric-v" style="color:'+m.c+'">'+m.v+'</div><div class="metric-l">'+m.l+'</div></div>';
+  }).join("");
+  // targets
+  var flds=[
+    {k:"weight",l:"Weight",u:"kg",s:U.weight,tg:85,c:"#60A5FA",dir:-1},
+    {k:"chest",l:"Chest+Shoulder",u:"in",s:U.chest||50,tg:54,c:"#F87171",dir:1},
+    {k:"waist",l:"Waist",u:"in",s:U.waist||39,tg:32,c:"#A78BFA",dir:-1},
+    {k:"biceps",l:"Biceps",u:"in",s:U.biceps||14,tg:17,c:"#34D399",dir:1},
+  ];
+  document.getElementById("prof-targets").innerHTML=flds.map(function(f){
+    var cur=U[f.k]||f.s,pct=f.dir>0?Math.max(0,Math.min(100,(cur-f.s)/(f.tg-f.s)*100)):Math.max(0,Math.min(100,(f.s-cur)/(f.s-f.tg)*100));
+    var rem=f.dir>0?f.tg-cur:cur-f.tg;
+    return'<div style="margin-bottom:14px"><div class="prog-row2"><span>'+f.l+' ('+cur+f.u+')</span><span>Target: '+f.tg+f.u+' · '+(rem>0?rem+' to go':'✅')+'</span></div><div class="prog-bg2"><div class="prog-fill2" style="width:'+pct.toFixed(0)+'%;background:'+f.c+'"></div></div></div>';
+  }).join("");
+  // cal 30
+  var cg="";for(var i=29;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toDateString(),di=d.getDay(),dn=!!cw[k],it=i===0;cg+='<div class="cal-c" style="background:'+(dn?getWOTemplate()[di].c:"var(--bg2)")+';border:'+(it?"1.5px solid "+wo.c:"1px solid var(--bdr)")+';color:'+(dn?"#000":"var(--txt3)")+'">'+(dn?"✓":"")+'</div>';}
+  document.getElementById("cal30").innerHTML=cg;
+  // badges
+  var ph=uGet("ph")||{};
+  var BGS=[
+    {ic:"🔥",t:"7-Day Streak",ok:s>=7},{ic:"💪",t:"10 Workouts",ok:Object.keys(cw).length>=10},
+    {ic:"📸",t:"First Photo",ok:Object.keys(ph).length>0},{ic:"🔥",t:"30-Day Streak",ok:s>=30},
+    {ic:"🏆",t:"30 Workouts",ok:Object.keys(cw).length>=30},{ic:"🎯",t:"Waist Under 36",ok:(U.waist||39)<=36},
+  ];
+  document.getElementById("badges").innerHTML=BGS.map(function(b){return'<div style="background:var(--bg2);border:1px solid '+(b.ok?"var(--bdr2)":"var(--bdr)")+';border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;opacity:'+(b.ok?1:.3)+'"><span style="font-size:22px">'+b.ic+'</span><span style="font-size:13px;font-weight:600;color:'+(b.ok?"var(--txt)":"var(--txt3)")+'">'+b.t+'</span></div>';}).join("");
+}
+
+/* ═══════════════════════════════════════════════════
+   SETTINGS
+═══════════════════════════════════════════════════ */
+function renderSettings(){
+  var s=uGet("settings")||{notif:false,sound:true,rest:true};
+  document.getElementById("tog-notif").classList.toggle("on",!!s.notif);
+  document.getElementById("tog-sound").classList.toggle("on",s.sound!==false);
+  document.getElementById("tog-rest").classList.toggle("on",s.rest!==false);
+}
+function togSet(k,el){var s=uGet("settings")||{notif:false,sound:true,rest:true};s[k]=!s[k];uSet("settings",s);el.classList.toggle("on",s[k]);}
+
+/* ═══════════════════════════════════════════════════
+   MEASUREMENTS MODAL
+═══════════════════════════════════════════════════ */
+function openM(){
+  document.getElementById("u-wt").value=U.weight||"";
+  document.getElementById("u-ch").value=U.chest||"";
+  document.getElementById("u-wa").value=U.waist||"";
+  document.getElementById("u-th").value=U.thighs||"";
+  document.getElementById("u-bi").value=U.biceps||"";
+  document.getElementById("msave").style.background=getWOTemplate()[today].c;
+  document.getElementById("msave").style.color="#000";
+  document.getElementById("mOv").classList.add("open");
+}
+function closeM(){document.getElementById("mOv").classList.remove("open");}
+function saveM(){
+  U.weight=parseFloat(document.getElementById("u-wt").value)||U.weight;
+  U.chest=parseFloat(document.getElementById("u-ch").value)||U.chest;
+  U.waist=parseFloat(document.getElementById("u-wa").value)||U.waist;
+  U.thighs=parseFloat(document.getElementById("u-th").value)||U.thighs;
+  U.biceps=parseFloat(document.getElementById("u-bi").value)||U.biceps;
+  USERS[CU]=U;sd("fp_users",USERS);
+  closeM();renderProfile();renderSidebar();
+}
+
+/* ═══════════════════════════════════════════════════
+   TIMERS & VIDEO
+═══════════════════════════════════════════════════ */
+var RT=null,rTot=30,rCur=30,rC=515;
+function shR(c){
+  document.getElementById("rrc").style.stroke=c||"var(--acc)";
+  document.getElementById("rcnt").style.color=c||"var(--acc)";
+  rTot=rCur=parseInt(document.querySelector(".ro.act2").textContent);
+  document.getElementById("rOv").classList.add("open");
+  clearInterval(RT);uRI();
+  RT=setInterval(function(){rCur--;uRI();if(rCur<=0){clearInterval(RT);beep(660,.2);setTimeout(function(){beep(880,.2);},250);skipR();}},1000);
+}
+function uRI(){document.getElementById("rcnt").textContent=rCur;document.getElementById("rrc").style.strokeDashoffset=rC*(1-rCur/rTot);}
+function skipR(){clearInterval(RT);document.getElementById("rOv").classList.remove("open");}
+function setR(s){rTot=rCur=s;document.querySelectorAll(".ro").forEach(function(el){el.classList.toggle("act2",el.textContent===s+"s");});clearInterval(RT);uRI();RT=setInterval(function(){rCur--;uRI();if(rCur<=0){clearInterval(RT);beep(660,.2);setTimeout(function(){beep(880,.2);},250);skipR();}},1000);}
+
+var XT=null,xTot=45,xCur=45,xC=565;
+function sXT(eid,nm,sec,c){xTot=xCur=sec;document.getElementById("xnm").textContent=nm;document.getElementById("xrc").style.stroke=c||"#A78BFA";document.getElementById("xnum").style.color=c||"#A78BFA";document.getElementById("xOv").classList.add("open");clearInterval(XT);uXI();XT=setInterval(function(){xCur--;uXI();if(xCur<=3&&xCur>0)beep(440,.1);if(xCur<=0){clearInterval(XT);beep(880,.4);setTimeout(stopX,600);}},1000);}
+function uXI(){var n=document.getElementById("xnum"),u=document.querySelector(".x-u");if(xCur>=60){n.textContent=Math.floor(xCur/60)+"m "+("0"+xCur%60).slice(-2)+"s";u.textContent="remaining";}else{n.textContent=xCur;u.textContent="seconds";}document.getElementById("xrc").style.strokeDashoffset=xC*(1-xCur/xTot);}
+function stopX(){clearInterval(XT);document.getElementById("xOv").classList.remove("open");}
+
+function openV(id){if(!id)return;document.getElementById("yfr").src="https://www.youtube.com/embed/"+id+"?autoplay=1";document.getElementById("vOv").classList.add("open");}
+function closeV(){document.getElementById("yfr").src="";document.getElementById("vOv").classList.remove("open");}
+
+function beep(f,t){try{var c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f||880;g.gain.value=.35;o.start();o.stop(c.currentTime+(t||.15));}catch(e){}}
+
+function doLogout(){closeSB();CU=null;U=null;sd("fp_cu",null);showScreen("s-auth");}
+
+/* ═══════════════════════════════════════════════════
+   SCREEN MANAGER
+═══════════════════════════════════════════════════ */
+function showScreen(id){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("show");});document.getElementById(id).classList.add("show");}
+
+/* ═══════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════ */
+(function(){
+  USERS=gd("fp_users")||{};
+  CU=gd("fp_cu");
+  if(CU&&USERS[CU]){U=USERS[CU];launchApp();}
+  else{showScreen("s-auth");}
+})();
+</script>
+</body>
+</html>
