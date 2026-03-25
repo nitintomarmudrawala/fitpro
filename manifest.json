@@ -2,13 +2,15 @@
   "name": "FitPro — Personal Fitness Coach",
   "short_name": "FitPro",
   "description": "Personalized fitness app with workouts, nutrition, body tracking and splits training. BMI-based plans for male and female.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/fitpro/",
+  "scope": "/fitpro/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#07070F",
   "theme_color": "#FF6B2B",
   "orientation": "portrait-primary",
   "lang": "en",
+  "id": "/fitpro/",
   "categories": ["health", "fitness", "lifestyle"],
   "icons": [
     {
@@ -30,8 +32,8 @@
       "name": "Today's Workout",
       "short_name": "Workout",
       "description": "Go to today's workout",
-      "url": "/",
-      "icons": [{ "src": "https://placehold.co/96x96/FF6B2B/FFFFFF?text=W", "sizes": "96x96" }]
+      "url": "/fitpro/",
+      "icons": [{ "src": "icon.png", "sizes": "512x512" }]
     }
   ]
 }

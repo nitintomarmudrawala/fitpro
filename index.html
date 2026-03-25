@@ -818,7 +818,13 @@ function renderObStep(){
 }
 
 function selGender(g){OB_DATA.gender=g;renderObStep();}
-function selGoal(g){OB_DATA.goal=g;renderObStep();}
+function selGoal(g){
+  if(!Array.isArray(OB_DATA.goals))OB_DATA.goals=OB_DATA.goal?[OB_DATA.goal]:[];
+  var idx=OB_DATA.goals.indexOf(g);
+  if(idx>-1)OB_DATA.goals.splice(idx,1);else OB_DATA.goals.push(g);
+  OB_DATA.goal=OB_DATA.goals[0]||"";
+  renderObStep();
+}
 function selDiet(d){OB_DATA.diet=d;renderObStep();}
 
 function obNext(){
@@ -831,11 +837,11 @@ function obNext(){
     if(!ht||!wt){alert("Enter height and weight");return;}
     OB_DATA.height=ht;OB_DATA.weight=wt;
   }
-  if(cfg.type==="goal"&&!OB_DATA.goal){alert("Select your goal");return;}
+  if(cfg.type==="goal"&&(!OB_DATA.goals||!OB_DATA.goals.length)&&!OB_DATA.goal){alert("Select at least one goal");return;}
   if(cfg.type==="diet"&&!OB_DATA.diet){alert("Select your diet preference");return;}
   if(cfg.type==="result"){
     // Save user
-    USERS[CU]=Object.assign(USERS[CU]||{},OB_DATA,{
+    OB_DATA.goals=OB_DATA.goals||[OB_DATA.goal];USERS[CU]=Object.assign(USERS[CU]||{},OB_DATA,{
       chest:50,waist:39,thighs:26,biceps:14,
       joined:new Date().toDateString(),
       wtr:[],
@@ -1134,9 +1140,9 @@ function saveM(){
   closeM();renderProfile();renderSidebar();
 }
 
-var gdGoal="",gdDiet="";
+var gdGoals=[],gdDiet="";
 function openGD(){
-  gdGoal=U.goal||"lose";gdDiet=U.diet||"nonveg";
+  gdGoals=Array.isArray(U.goals)?[].concat(U.goals):(U.goal?[U.goal]:["lose"]);gdDiet=U.diet||"nonveg";
   var c=getWOTemplate()[today].c;
   var goals=[
     {k:"lose",ic:"🔥",t:"Lose Fat",s:"Burn fat, get lean"},
@@ -1145,8 +1151,11 @@ function openGD(){
     {k:"splits",ic:"🧘",t:"Flexibility",s:"Yoga & splits"},
   ];
   document.getElementById("gd-goals").innerHTML=goals.map(function(g){
-    return'<div class="goal-card'+(gdGoal===g.k?" sel":"")+'\" onclick="gdGoal=\''+g.k+'\';renderGD()">'
-      +'<div class="goal-ico">'+g.ic+'</div><div class="goal-t">'+g.t+'</div><div class="goal-s">'+g.s+'</div></div>';
+    var sel=gdGoals.indexOf(g.k)>-1;
+    return'<div class="goal-card'+(sel?" sel":"")+'" onclick="toggleGdGoal(\''+g.k+'\')">'+
+      '<div class="goal-ico">'+g.ic+'</div><div class="goal-t">'+g.t+'</div><div class="goal-s">'+g.s+'</div>'+
+      (sel?'<div style="font-size:10px;font-weight:800;color:var(--acc);margin-top:4px">✓ SELECTED</div>':'')+
+      '</div>';
   }).join("");
   document.getElementById("gd-diet").innerHTML=
     '<div class="goal-card'+(gdDiet==="nonveg"?" sel":"")+'\" onclick="gdDiet=\'nonveg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
@@ -1156,6 +1165,11 @@ function openGD(){
   document.getElementById("gd-save").style.background=c;
   document.getElementById("gdModal").style.display="flex";
 }
+function toggleGdGoal(g){
+  var idx=gdGoals.indexOf(g);
+  if(idx>-1)gdGoals.splice(idx,1);else gdGoals.push(g);
+  renderGD();
+}
 function renderGD(){
   var goals=[
     {k:"lose",ic:"🔥",t:"Lose Fat",s:"Burn fat, get lean"},
@@ -1164,18 +1178,21 @@ function renderGD(){
     {k:"splits",ic:"🧘",t:"Flexibility",s:"Yoga & splits"},
   ];
   document.getElementById("gd-goals").innerHTML=goals.map(function(g){
-    return'<div class="goal-card'+(gdGoal===g.k?" sel":"")+'\" onclick="gdGoal=\''+g.k+'\';renderGD()">'
-      +'<div class="goal-ico">'+g.ic+'</div><div class="goal-t">'+g.t+'</div><div class="goal-s">'+g.s+'</div></div>';
+    var sel=gdGoals.indexOf(g.k)>-1;
+    return'<div class="goal-card'+(sel?" sel":"")+'" onclick="toggleGdGoal(\''+g.k+'\')">'+
+      '<div class="goal-ico">'+g.ic+'</div><div class="goal-t">'+g.t+'</div><div class="goal-s">'+g.s+'</div>'+
+      (sel?'<div style="font-size:10px;font-weight:800;color:var(--acc);margin-top:4px;letter-spacing:1px">✓ SELECTED</div>':'')+
+      '</div>';
   }).join("");
   document.getElementById("gd-diet").innerHTML=
-    '<div class="goal-card'+(gdDiet==="nonveg"?" sel":"")+'\" onclick="gdDiet=\'nonveg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
-    +'<span style="font-size:30px">🍗</span><div class="goal-t" style="font-size:13px">Non-Veg</div></div>'
-    +'<div class="goal-card'+(gdDiet==="veg"?" sel":"")+'\" onclick="gdDiet=\'veg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'
-    +'<span style="font-size:30px">🥦</span><div class="goal-t" style="font-size:13px">Vegetarian</div></div>';
+    '<div class="goal-card'+(gdDiet==="nonveg"?" sel":"")+'" onclick="gdDiet=\'nonveg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'+
+    '<span style="font-size:30px">🍗</span><div class="goal-t" style="font-size:13px">Non-Veg</div></div>'+
+    '<div class="goal-card'+(gdDiet==="veg"?" sel":"")+'" onclick="gdDiet=\'veg\';renderGD()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px">'+
+    '<span style="font-size:30px">🥦</span><div class="goal-t" style="font-size:13px">Vegetarian</div></div>';
 }
 function closeGD(){document.getElementById("gdModal").style.display="none";}
 function saveGD(){
-  U.goal=gdGoal;U.diet=gdDiet;
+  U.goals=gdGoals;U.goal=gdGoals[0]||"lose";U.diet=gdDiet;
   USERS[CU]=U;sd("fp_users",USERS);
   closeGD();renderProfile();renderSidebar();renderWorkout();
   if(curPg==="food")renderFood();
