@@ -1235,347 +1235,865 @@ function stopX(){clearInterval(XT);document.getElementById("xOv").classList.remo
 
 
 /* ═══ ANIMATED EXERCISE DEMOS ═══ */
+* ═══════════════════════════════════════
+   REALISTIC HUMAN FIGURE EXERCISE DEMOS
+   Gender-aware: uses U.gender M/F
+═══════════════════════════════════════ */
+
+function bodyColor(){return(U&&U.gender==="F")?"#E8A87C":"#D4956A";}
+function muscleColor(){return "#FF6B2B";}
+function accentColor(){return(U&&U.gender==="F")?"#F87171":"#60A5FA";}
+
+function humanSVG(exercise,color){
+  var g=U&&U.gender==="F";
+  var demos={
+    "squat":squatSVG(g,color),
+    "pushup":pushupSVG(g,color),
+    "plank":plankSVG(g,color),
+    "curl":curlSVG(g,color),
+    "deadlift":deadliftSVG(g,color),
+    "legraise":legraiserSVG(g,color),
+    "crunch":crunchSVG(g,color),
+    "lateraise":lateraiseSVG(g,color),
+    "jumpRope":jumpropeSVG(g,color),
+    "mountainClimber":mountainSVG(g,color),
+    "kettlebell":kettlebellSVG(g,color),
+    "russianTwist":twistSVG(g,color),
+    "calfRaise":calfraiseSVG(g,color),
+    "burpee":burpeeSVG(g,color),
+    "catcow":catcowSVG(g,color),
+    "default":defaultSVG(g,color)
+  };
+  return demos[exercise]||demos["default"];
+}
+
+/* ── SQUAT ── */
+function squatSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%"><stop offset="0%" stop-color="#0F0F1C"/><stop offset="100%" stop-color="#07070F"/></radialGradient>
+    <linearGradient id="muscle" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="${c}"/><stop offset="100%" stop-color="${c}88"/></linearGradient>
+  </defs>
+  <rect width="300" height="280" fill="url(#bg)"/>
+  <!-- Floor shadow -->
+  <ellipse cx="150" cy="265" rx="70" ry="8" fill="rgba(0,0,0,0.4)"/>
+  <!-- Floor -->
+  <rect x="20" y="258" width="260" height="3" rx="1.5" fill="#252540"/>
+  
+  <style>
+    @keyframes sq{0%,100%{transform:translateY(0)}50%{transform:translateY(32px)}}
+    @keyframes sqleg{0%,100%{transform:rotate(0deg)}50%{transform:rotate(35deg)}}
+    @keyframes sqarm{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+    @keyframes breathe{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.04)}}
+    @keyframes musclepulse{0%,100%{opacity:0.6}50%{opacity:1}}
+  </style>
+
+  <!-- Barbell -->
+  <rect x="60" y="95" width="180" height="8" rx="4" fill="#555" opacity="0.9"/>
+  <rect x="55" y="88" width="16" height="22" rx="3" fill="#777"/>
+  <rect x="229" y="88" width="16" height="22" rx="3" fill="#777"/>
+  <rect x="38" y="90" width="22" height="18" rx="9" fill="#444"/>
+  <rect x="240" y="90" width="22" height="18" rx="9" fill="#444"/>
+
+  <!-- BODY - animated squat -->
+  <g style="animation:sq 2.5s ease-in-out infinite;transform-origin:150px 180px">
+    <!-- Torso -->
+    <rect x="127" y="108" width="${f?'46':'50'}" height="62" rx="${f?'8':'6'}" fill="${cloth}" style="animation:breathe 2.5s ease-in-out infinite;transform-origin:152px 139px"/>
+    <!-- Body shape overlay -->
+    <path d="M${f?'127,108 Q150,100 173,108 L173,170 Q150,175 127,170 Z':'130,108 Q150,102 170,108 L170,170 Q150,174 130,170 Z'}" fill="rgba(0,0,0,0.15)"/>
+    
+    <!-- Shoulders on bar -->
+    <ellipse cx="127" cy="107" rx="12" ry="10" fill="${skin}"/>
+    <ellipse cx="173" cy="107" rx="12" ry="10" fill="${skin}"/>
+    
+    <!-- Neck -->
+    <rect x="143" y="90" width="14" height="20" rx="7" fill="${skin}"/>
+    
+    <!-- Head -->
+    <ellipse cx="150" cy="72" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <!-- Hair -->
+    <path d="${f?'M128,68 Q130,48 150,46 Q170,48 172,68 Q165,52 150,50 Q135,52 128,68':'M130,70 Q132,52 150,50 Q168,52 170,70 Q162,54 150,52 Q138,54 130,70'}" fill="${hair}"/>
+    ${f?`<!-- Female hair long -->
+    <path d="M128,68 Q118,90 122,110" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>
+    <path d="M172,68 Q182,90 178,110" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>`:''}
+    <!-- Face -->
+    <circle cx="143" cy="70" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="157" cy="70" r="2.5" fill="#333" opacity="0.8"/>
+    <path d="M144,78 Q150,82 156,78" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- Arms gripping bar -->
+    <rect x="105" y="98" width="25" height="10" rx="5" fill="${skin}"/>
+    <rect x="170" y="98" width="25" height="10" rx="5" fill="${skin}"/>
+    
+    <!-- Core/abs detail -->
+    <line x1="150" y1="115" x2="150" y2="165" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+    <line x1="135" y1="130" x2="165" y2="130" stroke="rgba(0,0,0,0.15)" stroke-width="1.5"/>
+    <line x1="135" y1="145" x2="165" y2="145" stroke="rgba(0,0,0,0.15)" stroke-width="1.5"/>
+    
+    <!-- Hips -->
+    <ellipse cx="150" cy="170" rx="28" ry="10" fill="${short}"/>
+    
+    <!-- Quads - highlighted during squat -->
+    <path d="M122,170 Q108,195 112,235 Q118,250 128,252 Q135,235 130,195 Z" fill="${short}" style="animation:musclepulse 2.5s ease-in-out infinite"/>
+    <path d="M122,170 Q108,195 112,235" fill="none" stroke="url(#muscle)" stroke-width="3" opacity="0.8" style="animation:musclepulse 2.5s ease-in-out infinite"/>
+    <path d="M178,170 Q192,195 188,235 Q182,250 172,252 Q165,235 170,195 Z" fill="${short}" style="animation:musclepulse 2.5s ease-in-out infinite"/>
+    <path d="M178,170 Q192,195 188,235" fill="none" stroke="url(#muscle)" stroke-width="3" opacity="0.8" style="animation:musclepulse 2.5s ease-in-out infinite"/>
+    
+    <!-- Knees -->
+    <circle cx="120" cy="235" r="10" fill="${skin}"/>
+    <circle cx="180" cy="235" r="10" fill="${skin}"/>
+    
+    <!-- Lower legs - bent at knee -->
+    <path d="M114,240 Q105,255 108,258" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M186,240 Q195,255 192,258" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    
+    <!-- Shoes -->
+    <ellipse cx="107" cy="259" rx="18" ry="7" fill="#333"/>
+    <ellipse cx="193" cy="259" rx="18" ry="7" fill="#333"/>
+  </g>
+  
+  <!-- Muscle label -->
+  <text x="150" y="22" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">QUADS · GLUTES · CORE</text>
+  <!-- Arrow indicator -->
+  <text x="20" y="200" fill="#4ADE80" font-size="18" opacity="0.8" style="animation:sq 2.5s ease-in-out infinite;transform-origin:20px 180px">↕</text>
+</svg>`;
+}
+
+/* ── PUSH UP ── */
+function pushupSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6";
+  return`<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <defs><linearGradient id="bg2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0F0F1C"/><stop offset="100%" stop-color="#07070F"/></linearGradient></defs>
+  <rect width="300" height="220" fill="url(#bg2)"/>
+  <rect x="20" y="185" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes pu{0%,100%{transform:translateY(0)}50%{transform:translateY(28px)}}
+    @keyframes puarm{0%,100%{transform:rotate(0deg)}50%{transform:rotate(22deg)}}
+    @keyframes chestpulse{0%,100%{opacity:0.5}50%{opacity:1}}
+  </style>
+  <g style="animation:pu 2s ease-in-out infinite;transform-origin:150px 140px">
+    <!-- Body horizontal -->
+    <path d="M55,130 Q150,118 245,130 Q245,155 150,148 Q55,155 55,130 Z" fill="${cloth}"/>
+    <!-- Chest muscle highlight -->
+    <path d="M105,120 Q135,112 165,120 Q150,132 135,128 Z" fill="url(#muscle)" opacity="0.6" style="animation:chestpulse 2s ease-in-out infinite"/>
+    <path d="M165,120 Q195,112 235,120 Q220,132 195,128 Z" fill="url(#muscle)" opacity="0.6" style="animation:chestpulse 2s ease-in-out infinite"/>
+    <!-- Head -->
+    <ellipse cx="255" cy="112" rx="${f?'20':'18'}" ry="${f?'22':'20'}" fill="${skin}"/>
+    <path d="${f?'M237,110 Q238,94 255,92 Q272,94 273,110':'M240,112 Q242,96 255,94 Q268,96 270,112'}" fill="${hair}"/>
+    ${f?`<path d="M237,110 Q228,125 230,140" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="249" cy="110" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="261" cy="110" r="2.5" fill="#333" opacity="0.8"/>
+    <path d="M250,118 Q255,122 260,118" fill="none" stroke="#333" stroke-width="1.5"/>
+    <!-- Neck -->
+    <rect x="240" y="128" width="12" height="14" rx="6" fill="${skin}"/>
+    <!-- Arms -->
+    <g style="transform-origin:190px 130px;animation:puarm 2s ease-in-out infinite">
+      <rect x="178" y="125" width="14" height="50" rx="7" fill="${skin}"/>
+      <ellipse cx="185" cy="178" rx="10" ry="6" fill="#222"/>
+    </g>
+    <g style="transform-origin:110px 130px;animation:puarm 2s ease-in-out infinite">
+      <rect x="98" y="125" width="14" height="50" rx="7" fill="${skin}"/>
+      <ellipse cx="105" cy="178" rx="10" ry="6" fill="#222"/>
+    </g>
+    <!-- Legs straight -->
+    <path d="M55,140 Q40,165 42,185" stroke="${f?'#EC4899':'#1D4ED8'}" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <path d="M75,143 Q60,165 62,185" stroke="${f?'#EC4899':'#1D4ED8'}" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <ellipse cx="43" cy="186" rx="16" ry="6" fill="#333"/>
+    <ellipse cx="63" cy="186" rx="16" ry="6" fill="#333"/>
+    <!-- Tricep highlight -->
+    <path d="M185,130 Q195,145 188,160" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" opacity="0.8" style="animation:chestpulse 2s ease-in-out infinite"/>
+    <path d="M105,130 Q95,145 102,160" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" opacity="0.8" style="animation:chestpulse 2s ease-in-out infinite"/>
+  </g>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">CHEST · TRICEPS · SHOULDERS</text>
+  <text x="150" y="210" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Slow down 2s · Explode up</text>
+</svg>`;
+}
+
+/* ── PLANK ── */
+function plankSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6";
+  return`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="180" fill="#07070F"/>
+  <rect x="20" y="152" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>@keyframes plk{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.025)}}
+  @keyframes plkcore{0%,100%{opacity:0.4}50%{opacity:1}}</style>
+  <!-- Body plank position -->
+  <g style="animation:plk 3s ease-in-out infinite;transform-origin:150px 115px">
+    <!-- Body straight line -->
+    <path d="M48,118 Q150,108 258,118 Q258,138 150,132 Q48,138 48,118 Z" fill="${cloth}"/>
+    <!-- Core highlight -->
+    <path d="M100,110 Q150,104 200,110 Q200,120 150,116 Q100,120 100,110 Z" fill="${c}" opacity="0.3" style="animation:plkcore 3s ease-in-out infinite"/>
+    <text x="150" y="113" fill="${c}" font-size="9" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" opacity="0.8" style="animation:plkcore 3s ease-in-out infinite">CORE ENGAGED</text>
+    <!-- Head -->
+    <ellipse cx="265" cy="105" rx="${f?'18':'17'}" ry="${f?'20':'18'}" fill="${skin}"/>
+    <path d="${f?'M249,103 Q250,88 265,86 Q280,88 281,103':'M251,105 Q252,90 265,88 Q278,90 279,105'}" fill="${hair}"/>
+    ${f?`<path d="M249,103 Q242,118 244,132" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="259" cy="103" r="2" fill="#333" opacity="0.8"/>
+    <circle cx="271" cy="103" r="2" fill="#333" opacity="0.8"/>
+    <!-- Neck -->
+    <rect x="252" y="120" width="11" height="12" rx="5.5" fill="${skin}"/>
+    <!-- Forearms on ground -->
+    <rect x="195" y="130" width="46" height="14" rx="7" fill="${skin}"/>
+    <rect x="70" y="130" width="46" height="14" rx="7" fill="${skin}"/>
+    <!-- Feet -->
+    <ellipse cx="46" cy="130" rx="14" ry="6" fill="#333"/>
+    <ellipse cx="58" cy="133" rx="12" ry="5" fill="#333"/>
+    <!-- Glute highlight -->
+    <path d="M80,112 Q90,106 100,112" fill="none" stroke="${c}" stroke-width="3" opacity="0.6"/>
+    <!-- Shoulder highlight -->
+    <path d="M210,110 Q220,106 230,110" fill="none" stroke="${c}" stroke-width="3" opacity="0.6"/>
+  </g>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">CORE · ABS · SHOULDERS · GLUTES</text>
+  <text x="150" y="170" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Breathe steady · Body straight</text>
+</svg>`;
+}
+
+/* ── BICEP CURL ── */
+function curlSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <ellipse cx="150" cy="272" rx="55" ry="7" fill="rgba(0,0,0,0.3)"/>
+  <style>
+    @keyframes cl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-115deg)}}
+    @keyframes bicep{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.18) scaleX(1.06)}}
+  </style>
+  <!-- Standing figure -->
+  <!-- Head -->
+  <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+  <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+  ${f?`<path d="M129,46 Q119,68 122,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>
+  <path d="M171,46 Q181,68 178,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>`:''}
+  <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+  <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+  <path d="M144,56 Q150,60 156,56" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- Neck -->
+  <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+  <!-- Torso -->
+  <path d="${f?'M120,84 Q150,78 180,84 L176,168 Q150,174 124,168 Z':'M122,84 Q150,78 178,84 L174,168 Q150,173 126,168 Z'}" fill="${cloth}"/>
+  <!-- Abs detail -->
+  <line x1="150" y1="95" x2="150" y2="162" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+  <line x1="135" y1="115" x2="165" y2="115" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+  <line x1="135" y1="130" x2="165" y2="130" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+  <line x1="135" y1="145" x2="165" y2="145" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+  <!-- Hips/shorts -->
+  <path d="M125,168 Q150,174 175,168 L178,210 Q150,216 122,210 Z" fill="${short}"/>
+  <!-- Legs -->
+  <path d="M126,208 L120,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M174,208 L180,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <ellipse cx="119" cy="269" rx="20" ry="7" fill="#333"/>
+  <ellipse cx="181" cy="269" rx="20" ry="7" fill="#333"/>
+  <!-- Left arm (static) -->
+  <rect x="178" y="86" width="16" height="65" rx="8" fill="${skin}"/>
+  <rect x="178" y="148" width="16" height="18" rx="8" fill="${skin}"/>
+  <!-- Dumbbell left -->
+  <rect x="175" y="162" width="22" height="8" rx="4" fill="#555"/>
+  <rect x="172" y="159" width="8" height="14" rx="4" fill="#777"/>
+  <rect x="192" y="159" width="8" height="14" rx="4" fill="#777"/>
+  <!-- Right arm - CURLING -->
+  <rect x="106" y="86" width="16" height="65" rx="8" fill="${skin}"/>
+  <!-- Bicep peak when curled -->
+  <g style="transform-origin:114px 150px;animation:cl 2s ease-in-out infinite">
+    <rect x="106" y="148" width="16" height="65" rx="8" fill="${skin}"/>
+    <!-- Bicep muscle bulge -->
+    <ellipse cx="114" cy="152" rx="12" ry="8" fill="${skin}" style="animation:bicep 2s ease-in-out infinite;transform-origin:114px 152px"/>
+    <path d="M104,148 Q97,138 106,130" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round" opacity="0.9" style="animation:bicep 2s ease-in-out infinite;transform-origin:114px 148px"/>
+    <!-- Dumbbell right -->
+    <rect x="103" y="208" width="22" height="8" rx="4" fill="#555"/>
+    <rect x="100" y="205" width="8" height="14" rx="4" fill="#777"/>
+    <rect x="118" y="205" width="8" height="14" rx="4" fill="#777"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">BICEPS · FOREARMS · BRACHIALIS</text>
+  <text x="90" y="155" fill="${c}" font-size="9" font-family="Inter,sans-serif" font-weight="700" opacity="0.8">↑ PEAK</text>
+</svg>`;
+}
+
+/* ── DEADLIFT ── */
+function deadliftSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="290" fill="#07070F"/>
+  <rect x="20" y="275" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes dl{0%,100%{transform:translateY(0) rotate(0deg)}40%{transform:translateY(38px) rotate(28deg)}100%{transform:translateY(0) rotate(0deg)}}
+    @keyframes dlbar{0%,100%{transform:translateY(0)}40%{transform:translateY(38px)}100%{transform:translateY(0)}}
+    @keyframes backpulse{0%,100%{opacity:0.5}40%{opacity:1}}
+  </style>
+  <!-- Barbell on floor -->
+  <g style="animation:dlbar 2.8s ease-in-out infinite">
+    <rect x="65" y="245" width="170" height="9" rx="4.5" fill="#555"/>
+    <ellipse cx="62" cy="249" rx="20" ry="22" fill="none" stroke="#777" stroke-width="6"/>
+    <ellipse cx="238" cy="249" rx="20" ry="22" fill="none" stroke="#777" stroke-width="6"/>
+    <ellipse cx="62" cy="249" rx="14" ry="16" fill="none" stroke="#555" stroke-width="4"/>
+    <ellipse cx="238" cy="249" rx="14" ry="16" fill="none" stroke="#555" stroke-width="4"/>
+  </g>
+  <!-- Figure hinging -->
+  <g style="animation:dl 2.8s ease-in-out infinite;transform-origin:150px 195px">
+    <!-- Head -->
+    <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+    ${f?`<path d="M129,46 Q120,70 124,92" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <!-- Neck -->
+    <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+    <!-- Torso (tilts forward) -->
+    <path d="${f?'M120,84 Q150,78 180,84 L176,175 Q150,181 124,175 Z':'M122,84 Q150,78 178,84 L174,175 Q150,180 126,175 Z'}" fill="${cloth}"/>
+    <!-- Lower back muscle highlight -->
+    <path d="M127,145 Q150,140 173,145 L173,175 Q150,180 127,175 Z" fill="${c}" opacity="0.35" style="animation:backpulse 2.8s ease-in-out infinite"/>
+    <text x="150" y="162" fill="${c}" font-size="8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" opacity="0.9" style="animation:backpulse 2.8s ease-in-out infinite">ERECTORS</text>
+    <!-- Arms reaching down -->
+    <path d="M122,92 Q100,130 95,195" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M178,92 Q200,130 205,195" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <!-- Hips/shorts -->
+    <path d="M125,174 Q150,180 175,174 L178,215 Q150,221 122,215 Z" fill="${short}"/>
+    <!-- Hamstring highlight -->
+    <path d="M126,213 L118,270" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M174,213 L182,270" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M120,215 Q108,242 112,268" fill="none" stroke="${c}" stroke-width="4" opacity="0.7" style="animation:backpulse 2.8s ease-in-out infinite"/>
+    <path d="M180,215 Q192,242 188,268" fill="none" stroke="${c}" stroke-width="4" opacity="0.7" style="animation:backpulse 2.8s ease-in-out infinite"/>
+    <ellipse cx="111" cy="271" rx="19" ry="6" fill="#333"/>
+    <ellipse cx="189" cy="271" rx="19" ry="6" fill="#333"/>
+    <!-- Hands gripping bar area -->
+    <ellipse cx="96" cy="196" rx="10" ry="8" fill="${skin}"/>
+    <ellipse cx="204" cy="196" rx="10" ry="8" fill="${skin}"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">LOWER BACK · HAMSTRINGS · GLUTES</text>
+  <text x="150" y="288" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Flat back · Drive through heels</text>
+</svg>`;
+}
+
+/* ── LEG RAISES ── */
+function legraiserSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="200" fill="#07070F"/>
+  <rect x="20" y="170" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes lr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-75deg)}}
+    @keyframes absflash{0%,100%{opacity:0.3}50%{opacity:1}}
+  </style>
+  <!-- Body lying down -->
+  <path d="${f?'M55,115 Q150,105 258,115 Q258,135 150,128 Q55,135 55,115 Z':'M55,115 Q150,106 258,115 Q258,133 150,127 Q55,133 55,115 Z'}" fill="${cloth}"/>
+  <!-- Abs highlight -->
+  <path d="M130,108 Q160,103 190,108 Q190,118 160,115 Q130,118 130,108 Z" fill="${c}" opacity="0.4" style="animation:absflash 2.5s ease-in-out infinite"/>
+  <line x1="160" y1="108" x2="160" y2="127" stroke="rgba(0,0,0,0.25)" stroke-width="1.5"/>
+  <line x1="140" y1="110" x2="180" y2="110" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+  <line x1="140" y1="118" x2="180" y2="118" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+  <!-- Head -->
+  <ellipse cx="267" cy="103" rx="${f?'18':'17'}" ry="${f?'20':'18'}" fill="${skin}"/>
+  <path d="${f?'M251,101 Q252,85 267,83 Q282,85 283,101':'M253,103 Q254,88 267,86 Q280,88 281,103'}" fill="${hair}"/>
+  ${f?`<path d="M251,101 Q243,116 246,130" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+  <circle cx="261" cy="101" r="2" fill="#333" opacity="0.8"/>
+  <circle cx="273" cy="101" r="2" fill="#333" opacity="0.8"/>
+  <!-- Neck -->
+  <rect x="255" y="118" width="11" height="10" rx="5.5" fill="${skin}"/>
+  <!-- Arms by sides -->
+  <rect x="220" y="128" width="50" height="10" rx="5" fill="${skin}"/>
+  <rect x="45" y="128" width="50" height="10" rx="5" fill="${skin}"/>
+  <!-- Legs - animated raising -->
+  <g style="transform-origin:60px 122px;animation:lr 2.5s ease-in-out infinite">
+    <path d="M60,122 L130,122" stroke="${short}" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <path d="M130,122 L185,122" stroke="${skin}" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <ellipse cx="188" cy="122" rx="16" ry="8" fill="#333"/>
+    <!-- Hip flexor highlight -->
+    <path d="M60,112 Q90,105 120,112" fill="none" stroke="${c}" stroke-width="4" opacity="0.8" style="animation:absflash 2.5s ease-in-out infinite"/>
+  </g>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">LOWER ABS · HIP FLEXORS · CORE</text>
+  <text x="150" y="193" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Slow up · Controlled down · No floor touch</text>
+</svg>`;
+}
+
+/* ── CRUNCH ── */
+function crunchSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="200" fill="#07070F"/>
+  <rect x="20" y="172" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes cr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-38deg)}}
+    @keyframes abscrunch{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(0.85)}}
+  </style>
+  <!-- Lower body flat -->
+  <path d="M60,148 Q120,140 165,148 L165,168 Q120,172 60,168 Z" fill="${short}"/>
+  <!-- Legs bent -->
+  <path d="M62,156 Q48,155 38,148 Q32,140 38,132" stroke="${skin}" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <path d="M95,156 Q88,155 82,148 Q76,140 82,132" stroke="${skin}" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <ellipse cx="38" cy="132" rx="14" ry="7" fill="#333"/>
+  <ellipse cx="82" cy="132" rx="14" ry="7" fill="#333"/>
+  <!-- Upper body curling up -->
+  <g style="transform-origin:165px 150px;animation:cr 2s ease-in-out infinite">
+    <!-- Torso -->
+    <path d="${f?'M148,145 Q185,138 222,145 L222,165 Q185,170 148,165 Z':'M148,145 Q185,139 222,145 L222,163 Q185,168 148,163 Z'}" fill="${cloth}"/>
+    <!-- Abs compressed highlight -->
+    <path d="M155,145 Q185,140 215,145 L215,155 Q185,150 155,155 Z" fill="${c}" opacity="0.5" style="animation:abscrunch 2s ease-in-out infinite;transform-origin:185px 150px"/>
+    <line x1="185" y1="145" x2="185" y2="163" stroke="rgba(0,0,0,0.25)" stroke-width="1.5"/>
+    <line x1="168" y1="148" x2="202" y2="148" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+    <line x1="168" y1="156" x2="202" y2="156" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+    <!-- Neck -->
+    <rect x="215" y="125" width="11" height="22" rx="5.5" fill="${skin}"/>
+    <!-- Head -->
+    <ellipse cx="225" cy="108" rx="${f?'20':'18'}" ry="${f?'22':'20'}" fill="${skin}"/>
+    <path d="${f?'M207,106 Q208,88 225,86 Q242,88 243,106':'M209,108 Q210,91 225,89 Q240,91 241,108'}" fill="${hair}"/>
+    ${f?`<path d="M207,106 Q199,122 202,138" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="219" cy="106" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="231" cy="106" r="2.5" fill="#333" opacity="0.8"/>
+    <path d="M220,114 Q225,118 230,114" fill="none" stroke="#333" stroke-width="1.5"/>
+    <!-- Arms behind head -->
+    <path d="M218,118 Q235,112 245,118" stroke="${skin}" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M218,122 Q202,115 192,122" stroke="${skin}" stroke-width="10" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">UPPER ABS · RECTUS ABDOMINIS</text>
+  <text x="150" y="192" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Exhale up · Squeeze · Slow down</text>
+</svg>`;
+}
+
+/* ── LATERAL RAISE ── */
+function lateraiseSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <ellipse cx="150" cy="272" rx="55" ry="7" fill="rgba(0,0,0,0.3)"/>
+  <style>
+    @keyframes latR{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-68deg)}}
+    @keyframes delt{0%,100%{opacity:0.4}50%{opacity:1}}
+  </style>
+  <!-- Head -->
+  <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+  <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+  ${f?`<path d="M129,46 Q119,68 122,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>
+  <path d="M171,46 Q181,68 178,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>`:''}
+  <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+  <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+  <path d="M144,56 Q150,60 156,56" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- Neck -->
+  <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+  <!-- Torso -->
+  <path d="${f?'M118,84 Q150,78 182,84 L178,170 Q150,176 122,170 Z':'M120,84 Q150,78 180,84 L176,170 Q150,175 124,170 Z'}" fill="${cloth}"/>
+  <!-- Shoulder cap highlights -->
+  <ellipse cx="118" cy="90" rx="14" ry="12" fill="${c}" opacity="0.5" style="animation:delt 2.5s ease-in-out infinite"/>
+  <ellipse cx="182" cy="90" rx="14" ry="12" fill="${c}" opacity="0.5" style="animation:delt 2.5s ease-in-out infinite"/>
+  <!-- Shorts/hips -->
+  <path d="M123,170 Q150,176 177,170 L180,215 Q150,220 120,215 Z" fill="${short}"/>
+  <!-- Legs -->
+  <path d="M122,213 L116,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M178,213 L184,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <ellipse cx="115" cy="269" rx="20" ry="7" fill="#333"/>
+  <ellipse cx="185" cy="269" rx="20" ry="7" fill="#333"/>
+  <!-- Arms raising - both sides -->
+  <g style="transform-origin:118px 92px;animation:latR 2.5s ease-in-out infinite">
+    <path d="M118,92 L55,92" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <!-- Dumbbell -->
+    <rect x="33" y="87" width="24" height="10" rx="5" fill="#555"/>
+    <rect x="30" y="84" width="8" height="16" rx="4" fill="#777"/>
+    <rect x="50" y="84" width="8" height="16" rx="4" fill="#777"/>
+  </g>
+  <g style="transform-origin:182px 92px;animation:latR 2.5s ease-in-out infinite;transform:scaleX(-1)">
+    <path d="M182,92 L245,92" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <rect x="243" y="87" width="24" height="10" rx="5" fill="#555"/>
+    <rect x="240" y="84" width="8" height="16" rx="4" fill="#777"/>
+    <rect x="260" y="84" width="8" height="16" rx="4" fill="#777"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">SIDE DELTOIDS · SHOULDERS</text>
+  <text x="150" y="288" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Lead with elbows · Slow down 3s</text>
+</svg>`;
+}
+
+/* ── JUMP ROPE ── */
+function jumpropeSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <ellipse cx="150" cy="272" rx="55" ry="7" fill="rgba(0,0,0,0.3)"/>
+  <style>
+    @keyframes jmp{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+    @keyframes rope1{0%,100%{d:path("M55,200 Q150,240 245,200")}50%{d:path("M55,200 Q150,160 245,200")}}
+    @keyframes wrist{0%,100%{transform:rotate(0deg)}50%{transform:rotate(360deg)}}
+    @keyframes cardio{0%,100%{opacity:0}25%,75%{opacity:1}}
+  </style>
+  <!-- Rope -->
+  <path d="M55,200 Q150,160 245,200" fill="none" stroke="${c}" stroke-width="3.5" stroke-linecap="round" style="animation:rope1 0.7s ease-in-out infinite"/>
+  <!-- Cardio indicators -->
+  <text x="60" y="80" fill="#F87171" font-size="14" font-weight="700" font-family="Inter,sans-serif" style="animation:cardio 1.4s ease-in-out infinite">♥</text>
+  <text x="225" y="75" fill="#F87171" font-size="14" font-weight="700" font-family="Inter,sans-serif" style="animation:cardio 1.4s ease-in-out infinite 0.7s">♥</text>
+  <!-- Jumping figure -->
+  <g style="animation:jmp 0.7s ease-in-out infinite;transform-origin:150px 180px">
+    <!-- Head -->
+    <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+    ${f?`<path d="M129,46 Q122,65 126,85" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>
+    <path d="M171,46 Q178,65 174,85" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <path d="M144,56 Q150,60 156,56" fill="none" stroke="#333" stroke-width="1.5"/>
+    <!-- Neck -->
+    <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+    <!-- Torso -->
+    <path d="${f?'M122,84 Q150,78 178,84 L174,162 Q150,168 126,162 Z':'M124,84 Q150,78 176,84 L172,162 Q150,167 128,162 Z'}" fill="${cloth}"/>
+    <!-- Shorts -->
+    <path d="M127,162 Q150,168 173,162 L175,200 Q150,205 125,200 Z" fill="${short}"/>
+    <!-- Arms holding rope handles -->
+    <path d="M122,90 Q80,110 55,175" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M178,90 Q220,110 245,175" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <!-- Rope handles -->
+    <rect x="48" y="170" width="12" height="28" rx="6" fill="#555"/>
+    <rect x="240" y="170" width="12" height="28" rx="6" fill="#555"/>
+    <!-- Legs bent (jumping) -->
+    <path d="M130,198 Q118,220 122,245" stroke="${skin}" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <path d="M170,198 Q182,220 178,245" stroke="${skin}" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <ellipse cx="122" cy="247" rx="18" ry="7" fill="#333"/>
+    <ellipse cx="178" cy="247" rx="18" ry="7" fill="#333"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">FULL BODY CARDIO · CALVES · CORE</text>
+  <text x="150" y="288" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Stay on toes · Wrists rotate · Core tight</text>
+</svg>`;
+}
+
+/* ── MOUNTAIN CLIMBER ── */
+function mountainSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="200" fill="#07070F"/>
+  <rect x="20" y="182" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes mcR{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-55deg)}}
+    @keyframes mcL{0%,100%{transform:rotate(-55deg)}50%{transform:rotate(0deg)}}
+    @keyframes corepulse{0%,100%{opacity:0.4}50%{opacity:0.9}}
+  </style>
+  <!-- Plank body -->
+  <path d="${f?'M50,120 Q150,108 262,118 Q262,138 150,132 Q50,140 50,120 Z':'M50,118 Q150,107 262,116 Q262,135 150,128 Q50,137 50,118 Z'}" fill="${cloth}"/>
+  <!-- Core highlight -->
+  <path d="M120,110 Q160,104 200,110 Q200,120 160,116 Q120,120 120,110 Z" fill="${c}" opacity="0.35" style="animation:corepulse 0.9s ease-in-out infinite"/>
+  <!-- Head -->
+  <ellipse cx="270" cy="107" rx="16" ry="18" fill="${skin}"/>
+  <circle cx="265" cy="105" r="2" fill="#333" opacity="0.8"/>
+  <circle cx="275" cy="105" r="2" fill="#333" opacity="0.8"/>
+  <!-- Arms -->
+  <rect x="222" y="128" width="42" height="12" rx="6" fill="${skin}"/>
+  <rect x="47" y="126" width="42" height="12" rx="6" fill="${skin}"/>
+  <ellipse cx="46" cy="130" rx="14" ry="7" fill="#222"/>
+  <ellipse cx="222" cy="130" rx="14" ry="7" fill="#222"/>
+  <!-- Right leg driving in -->
+  <g style="transform-origin:170px 125px;animation:mcR 0.8s ease-in-out infinite">
+    <path d="M170,125 L200,155" stroke="${short}" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <path d="M200,155 L200,180" stroke="${skin}" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <ellipse cx="200" cy="182" rx="16" ry="6" fill="#333"/>
+  </g>
+  <!-- Left leg extending back -->
+  <g style="transform-origin:140px 126px;animation:mcL 0.8s ease-in-out infinite">
+    <path d="M140,126 L110,156" stroke="${short}" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <path d="M110,156 L80,180" stroke="${skin}" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <ellipse cx="79" cy="181" rx="14" ry="6" fill="#333"/>
+  </g>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">CORE · CARDIO · SHOULDERS · HIP FLEXORS</text>
+  <text x="150" y="197" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Hips level · Drive knees fast · Core tight</text>
+</svg>`;
+}
+
+/* ── KETTLEBELL SWING ── */
+function kettlebellSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes kb{0%,100%{transform:rotate(25deg)}50%{transform:rotate(-45deg)}}
+    @keyframes kbhip{0%,100%{transform:rotate(0deg)}50%{transform:rotate(20deg)}}
+    @keyframes glute{0%,100%{opacity:0.3}50%{opacity:0.9}}
+  </style>
+  <!-- Head -->
+  <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+  <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+  ${f?`<path d="M129,46 Q120,68 124,90" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>
+  <path d="M171,46 Q180,68 176,90" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+  <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+  <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+  <path d="M144,56 Q150,60 156,56" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- Neck -->
+  <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+  <!-- Torso -->
+  <path d="${f?'M120,84 Q150,78 180,84 L176,162 Q150,168 124,162 Z':'M122,84 Q150,78 178,84 L174,162 Q150,167 126,162 Z'}" fill="${cloth}"/>
+  <!-- Glute/posterior highlight -->
+  <path d="M125,155 Q150,162 175,155 L176,162 Q150,168 124,162 Z" fill="${c}" opacity="0.4" style="animation:glute 1.8s ease-in-out infinite"/>
+  <!-- Hips/shorts -->
+  <path d="M125,162 Q150,168 175,162 L178,205 Q150,210 122,205 Z" fill="${short}"/>
+  <!-- Arms swinging with KB -->
+  <g style="transform-origin:150px 110px;animation:kb 1.8s ease-in-out infinite">
+    <path d="M122,95 Q90,108 60,120" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M178,95 Q210,108 240,120" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <!-- Kettlebell -->
+    <circle cx="150" cy="155" r="20" fill="none" stroke="#555" stroke-width="5"/>
+    <circle cx="150" cy="163" r="14" fill="#444"/>
+    <path d="M136,142 Q142,132 158,132 Q164,142 160,138 Q158,128 142,128 Q138,138 140,142 Z" fill="none" stroke="#666" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <!-- Legs -->
+  <path d="M124,203 L118,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M176,203 L182,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <ellipse cx="117" cy="269" rx="20" ry="7" fill="#333"/>
+  <ellipse cx="183" cy="269" rx="20" ry="7" fill="#333"/>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">GLUTES · BACK · CORE · HAMSTRINGS</text>
+  <text x="150" y="288" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Hip snap · Not arm lift · Power from hips</text>
+</svg>`;
+}
+
+/* ── RUSSIAN TWIST ── */
+function twistSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="220" fill="#07070F"/>
+  <rect x="20" y="200" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes tw{0%{transform:rotate(-28deg)}50%{transform:rotate(28deg)}100%{transform:rotate(-28deg)}}
+    @keyframes oblique{0%,100%{opacity:0.4}50%{opacity:1}}
+  </style>
+  <!-- Lower body - legs elevated V shape -->
+  <path d="M100,170 Q148,162 165,148 L170,160 Q152,172 148,182 Z" fill="${short}"/>
+  <path d="M115,180 Q130,165 148,155" stroke="${skin}" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <path d="M135,183 Q145,168 148,155" stroke="${skin}" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <ellipse cx="114" cy="182" rx="14" ry="6" fill="#333"/>
+  <ellipse cx="135" cy="184" rx="13" ry="5" fill="#333"/>
+  <!-- Torso rotating -->
+  <g style="transform-origin:148px 140px;animation:tw 2s ease-in-out infinite">
+    <!-- Torso -->
+    <path d="${f?'M118,110 Q148,102 178,110 L176,158 Q148,164 120,158 Z':'M120,110 Q148,103 176,110 L174,158 Q148,163 122,158 Z'}" fill="${cloth}"/>
+    <!-- Oblique highlights -->
+    <path d="M118,125 Q130,118 142,125 L140,155 Q128,158 118,152 Z" fill="${c}" opacity="0.4" style="animation:oblique 2s ease-in-out infinite"/>
+    <path d="M154,125 Q166,118 178,125 L178,152 Q168,158 156,155 Z" fill="${c}" opacity="0.4" style="animation:oblique 2s ease-in-out infinite 1s"/>
+    <line x1="148" y1="112" x2="148" y2="156" stroke="rgba(0,0,0,0.25)" stroke-width="1.5"/>
+    <!-- Neck -->
+    <rect x="141" y="90" width="14" height="22" rx="7" fill="${skin}"/>
+    <!-- Head -->
+    <ellipse cx="148" cy="70" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <path d="${f?'M127,68 Q128,48 148,46 Q168,48 169,68':'M130,70 Q131,52 148,50 Q165,52 166,70'}" fill="${hair}"/>
+    ${f?`<path d="M127,68 Q118,90 122,110" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="141" cy="68" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="155" cy="68" r="2.5" fill="#333" opacity="0.8"/>
+    <!-- Arms + dumbbell -->
+    <path d="M120,118 Q100,130 82,142" stroke="${skin}" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M176,118 Q196,130 214,142" stroke="${skin}" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <!-- Weight in hands -->
+    <rect x="72" y="137" width="22" height="10" rx="5" fill="#555"/>
+    <rect x="70" y="134" width="7" height="16" rx="3.5" fill="#777"/>
+    <rect x="87" y="134" width="7" height="16" rx="3.5" fill="#777"/>
+  </g>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">OBLIQUES · CORE · ROTATIONAL POWER</text>
+  <text x="150" y="215" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Rotate from core · Touch floor each side</text>
+</svg>`;
+}
+
+/* ── CALF RAISE ── */
+function calfraiseSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <ellipse cx="150" cy="272" rx="55" ry="7" fill="rgba(0,0,0,0.3)"/>
+  <style>
+    @keyframes calf{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+    @keyframes calfmuscle{0%,100%{transform:scaleY(1);opacity:0.5}50%{transform:scaleY(1.2);opacity:1}}
+  </style>
+  <g style="animation:calf 2s ease-in-out infinite;transform-origin:150px 200px">
+    <!-- Head -->
+    <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+    ${f?`<path d="M129,46 Q119,68 122,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>
+    <path d="M171,46 Q181,68 178,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>`:''}
+    <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <!-- Neck -->
+    <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+    <!-- Torso -->
+    <path d="${f?'M120,84 Q150,78 180,84 L176,162 Q150,168 124,162 Z':'M122,84 Q150,78 178,84 L174,162 Q150,167 126,162 Z'}" fill="${cloth}"/>
+    <!-- Arms at sides -->
+    <path d="M120,90 L108,165" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M180,90 L192,165" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <!-- Hips/shorts -->
+    <path d="M125,162 Q150,168 175,162 L178,205 Q150,210 122,205 Z" fill="${short}"/>
+    <!-- Upper legs -->
+    <path d="M126,203 L122,248" stroke="${skin}" stroke-width="24" fill="none" stroke-linecap="round"/>
+    <path d="M174,203 L178,248" stroke="${skin}" stroke-width="24" fill="none" stroke-linecap="round"/>
+    <!-- CALF MUSCLE highlighted -->
+    <path d="M115,245 Q108,256 112,268" stroke="${skin}" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <path d="M185,245 Q192,256 188,268" stroke="${skin}" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <!-- Calf muscle bulge -->
+    <ellipse cx="112" cy="255" rx="14" ry="18" fill="${c}" opacity="0.5" style="animation:calfmuscle 2s ease-in-out infinite;transform-origin:112px 255px"/>
+    <ellipse cx="188" cy="255" rx="14" ry="18" fill="${c}" opacity="0.5" style="animation:calfmuscle 2s ease-in-out infinite;transform-origin:188px 255px"/>
+    <!-- Feet raised on toes -->
+    <path d="M110,268 L125,265" stroke="#333" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M190,268 L175,265" stroke="#333" stroke-width="10" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">CALVES · GASTROCNEMIUS · SOLEUS</text>
+  <text x="150" y="288" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Rise high · Hold 1s · Full stretch down</text>
+</svg>`;
+}
+
+/* ── BURPEE ── */
+function burpeeSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>@keyframes bp{0%{transform:translateY(0) scale(1)}20%{transform:translateY(35px) scale(0.75)}50%{transform:translateY(42px) scale(0.7)}80%{transform:translateY(-22px) scale(1.05)}100%{transform:translateY(0) scale(1)}}</style>
+  <!-- Energy rings -->
+  <circle cx="150" cy="135" r="70" fill="none" stroke="${c}" stroke-width="1" opacity="0.1"/>
+  <circle cx="150" cy="135" r="90" fill="none" stroke="${c}" stroke-width="1" opacity="0.07"/>
+  <g style="animation:bp 2s ease-in-out infinite;transform-origin:150px 170px">
+    <ellipse cx="150" cy="268" rx="50" ry="7" fill="rgba(0,0,0,0.3)"/>
+    <!-- Head -->
+    <ellipse cx="150" cy="52" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <path d="${f?'M129,50 Q130,30 150,28 Q170,30 171,50':'M132,52 Q133,34 150,32 Q167,34 168,52'}" fill="${hair}"/>
+    ${f?`<path d="M129,50 Q121,72 124,94" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/>`:''}
+    <circle cx="143" cy="50" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="157" cy="50" r="2.5" fill="#333" opacity="0.8"/>
+    <path d="M144,60 Q150,64 156,60" fill="none" stroke="#333" stroke-width="1.5"/>
+    <!-- Neck -->
+    <rect x="143" y="72" width="14" height="18" rx="7" fill="${skin}"/>
+    <!-- Torso -->
+    <path d="${f?'M120,88 Q150,82 180,88 L176,165 Q150,171 124,165 Z':'M122,88 Q150,82 178,88 L174,165 Q150,170 126,165 Z'}" fill="${cloth}"/>
+    <!-- Arms raised up (jump phase) -->
+    <path d="M120,96 Q88,75 72,58" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M180,96 Q212,75 228,58" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <!-- Hands -->
+    <circle cx="70" cy="56" r="8" fill="${skin}"/>
+    <circle cx="230" cy="56" r="8" fill="${skin}"/>
+    <!-- Hips/shorts -->
+    <path d="M125,165 Q150,171 175,165 L178,208 Q150,213 122,208 Z" fill="${short}"/>
+    <!-- Legs bent jump -->
+    <path d="M126,206 Q114,232 118,262" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M174,206 Q186,232 182,262" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <ellipse cx="118" cy="263" rx="19" ry="7" fill="#333"/>
+    <ellipse cx="182" cy="263" rx="19" ry="7" fill="#333"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">FULL BODY · CARDIO · EXPLOSIVE POWER</text>
+  <text x="150" y="288" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Drop · Plank · Push · Jump · Clap!</text>
+</svg>`;
+}
+
+/* ── CAT COW ── */
+function catcowSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",cloth=f?"#F87171":"#3B82F6";
+  return`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="200" fill="#07070F"/>
+  <rect x="20" y="182" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>
+    @keyframes catphase{0%,100%{d:path("M70,100 Q120,80 180,82 Q220,84 238,100")}50%{d:path("M70,100 Q120,125 180,128 Q220,130 238,100")}}
+    @keyframes headnod{0%,100%{transform:rotate(0deg)}50%{transform:rotate(18deg)}}
+    @keyframes spinecolor{0%,100%{stroke:${c}}50%{stroke:#4ADE80}}
+  </style>
+  <!-- Yoga mat -->
+  <rect x="25" y="152" width="250" height="12" rx="6" fill="#1a1a3a"/>
+  <!-- Body on all fours -->
+  <!-- Back/spine animated -->
+  <path d="M70,100 Q120,80 180,82 Q220,84 238,100" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round" style="animation:catphase 3s ease-in-out infinite;animation-name:catphase; stroke-dasharray:none"/>
+  <!-- Parallel back shape -->
+  <path d="M70,100 Q120,80 180,82 Q220,84 238,100 Q220,94 180,92 Q120,90 70,110 Z" fill="${cloth}" opacity="0.7" style="animation:catphase 3s ease-in-out infinite"/>
+  <!-- Arms -->
+  <rect x="54" y="100" width="16" height="45" rx="8" fill="${skin}"/>
+  <rect x="222" y="100" width="16" height="45" rx="8" fill="${skin}"/>
+  <ellipse cx="62" cy="148" rx="14" ry="6" fill="#333"/>
+  <ellipse cx="230" cy="148" rx="14" ry="6" fill="#333"/>
+  <!-- Legs -->
+  <rect x="80" y="118" width="14" height="36" rx="7" fill="${f?'#EC4899':'#1D4ED8'}"/>
+  <rect x="200" y="118" width="14" height="36" rx="7" fill="${f?'#EC4899':'#1D4ED8'}"/>
+  <ellipse cx="87" cy="156" rx="13" ry="6" fill="#333"/>
+  <ellipse cx="207" cy="156" rx="13" ry="6" fill="#333"/>
+  <!-- Head -->
+  <g style="transform-origin:238px 100px;animation:headnod 3s ease-in-out infinite">
+    <ellipse cx="258" cy="88" rx="${f?'18':'16'}" ry="${f?'20':'18'}" fill="${skin}"/>
+    <circle cx="252" cy="86" r="2" fill="#333" opacity="0.8"/>
+    <circle cx="264" cy="86" r="2" fill="#333" opacity="0.8"/>
+    <path d="M253,93 Q258,97 263,93" fill="none" stroke="#333" stroke-width="1.5"/>
+  </g>
+  <!-- Spine label -->
+  <text x="155" y="72" fill="${c}" font-size="9" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" opacity="0.8">SPINE FLEXION ↕</text>
+  <text x="150" y="18" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">SPINE · BACK MOBILITY · CORE</text>
+  <text x="150" y="197" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Flow with breath · No rushing</text>
+</svg>`;
+}
+
+/* ── DEFAULT ── */
+function defaultSVG(f,c){
+  var skin=f?"#FBBF8A":"#D4956A",hair=f?"#7C3AED":"#1a1a2e",cloth=f?"#F87171":"#3B82F6",short=f?"#EC4899":"#1D4ED8";
+  return`<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="300" height="280" fill="#07070F"/>
+  <rect x="20" y="268" width="260" height="3" rx="1.5" fill="#252540"/>
+  <style>@keyframes def{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.04)}}</style>
+  <ellipse cx="150" cy="272" rx="55" ry="7" fill="rgba(0,0,0,0.3)"/>
+  <g style="animation:def 3s ease-in-out infinite;transform-origin:150px 150px">
+    <ellipse cx="150" cy="48" rx="${f?'22':'20'}" ry="${f?'24':'22'}" fill="${skin}"/>
+    <path d="${f?'M129,46 Q130,26 150,24 Q170,26 171,46':'M132,48 Q133,30 150,28 Q167,30 168,48'}" fill="${hair}"/>
+    ${f?`<path d="M129,46 Q119,68 122,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>
+    <path d="M171,46 Q181,68 178,90" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>`:''}
+    <circle cx="143" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <circle cx="157" cy="46" r="2.5" fill="#333" opacity="0.8"/>
+    <path d="M144,56 Q150,60 156,56" fill="none" stroke="#333" stroke-width="1.5"/>
+    <rect x="143" y="68" width="14" height="18" rx="7" fill="${skin}"/>
+    <path d="${f?'M120,84 Q150,78 180,84 L176,162 Q150,168 124,162 Z':'M122,84 Q150,78 178,84 L174,162 Q150,167 126,162 Z'}" fill="${cloth}"/>
+    <path d="M120,90 L105,155" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M180,90 L195,155" stroke="${skin}" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M125,162 Q150,168 175,162 L178,208 Q150,213 122,208 Z" fill="${short}"/>
+    <path d="M126,206 L118,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M174,206 L182,268" stroke="${skin}" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <ellipse cx="117" cy="269" rx="20" ry="7" fill="#333"/>
+    <ellipse cx="183" cy="269" rx="20" ry="7" fill="#333"/>
+  </g>
+  <text x="150" y="20" fill="${c}" font-size="11" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">EXERCISE FORM DEMO</text>
+  <text x="150" y="288" fill="#888" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">Quality over speed · Feel the muscle</text>
+</svg>`;
+}
+
+/* ═══════════════════════════════════════
+   DEMO LOOKUP TABLE
+═══════════════════════════════════════ */
 var DEMOS = {
-  // PUSH exercises
-  "IODxDxX7oi4":{name:"Push-Ups",muscle:"Chest · Triceps · Shoulders",yt:"IODxDxX7oi4",
-    steps:"1. Start in plank position, hands shoulder-width apart<br>2. Lower chest to floor — 2 seconds down<br>3. Push back up explosively<br>4. Keep core tight throughout",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <style>
-        .body{animation:pushup 2s ease-in-out infinite}
-        @keyframes pushup{0%,100%{transform:translateY(0)}50%{transform:translateY(30px)}}
-        .arm{transform-origin:80px 80px;animation:armRotate 2s ease-in-out infinite}
-        @keyframes armRotate{0%,100%{transform:rotate(0deg)}50%{transform:rotate(25deg)}}
-      </style>
-      <rect x="0" y="0" width="300" height="200" fill="#07070F"/>
-      <!-- floor -->
-      <line x1="20" y1="160" x2="280" y2="160" stroke="#252540" stroke-width="2"/>
-      <!-- body group -->
-      <g class="body">
-        <!-- head -->
-        <circle cx="230" cy="65" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <!-- neck -->
-        <line x1="230" y1="83" x2="230" y2="95" stroke="#FF6B2B" stroke-width="3"/>
-        <!-- torso -->
-        <line x1="230" y1="95" x2="100" y2="120" stroke="#FF6B2B" stroke-width="4"/>
-        <!-- right arm -->
-        <line x1="200" y1="100" x2="200" y2="155" stroke="#60A5FA" stroke-width="3"/>
-        <circle cx="200" cy="158" r="5" fill="#60A5FA"/>
-        <!-- left arm -->
-        <line x1="140" y1="112" x2="140" y2="155" stroke="#60A5FA" stroke-width="3"/>
-        <circle cx="140" cy="158" r="5" fill="#60A5FA"/>
-        <!-- hips -->
-        <line x1="100" y1="120" x2="80" y2="155" stroke="#FF6B2B" stroke-width="4"/>
-        <!-- right leg -->
-        <line x1="85" y1="148" x2="60" y2="158" stroke="#FBBF24" stroke-width="3"/>
-        <circle cx="57" cy="159" r="5" fill="#FBBF24"/>
-        <!-- left leg -->
-        <line x1="78" y1="152" x2="55" y2="158" stroke="#FBBF24" stroke-width="3"/>
-      </g>
-      <!-- arrows -->
-      <text x="150" y="185" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="sans-serif">▼ Lower ▲ Push</text>
-    </svg>`},
-  "J0DXBSpghaI":{name:"Diamond Push-Ups",muscle:"Triceps · Inner Chest",yt:"J0DXBSpghaI",
-    steps:"1. Form diamond shape with index fingers and thumbs<br>2. Keep elbows tight to body<br>3. Lower chest to hands<br>4. Push up and squeeze triceps",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <line x1="20" y1="160" x2="280" y2="160" stroke="#252540" stroke-width="2"/>
-      <g style="animation:pushup 2s ease-in-out infinite">
-        <style>@keyframes pushup{0%,100%{transform:translateY(0)}50%{transform:translateY(28px)}}</style>
-        <circle cx="230" cy="65" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="230" y1="83" x2="230" y2="95" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="230" y1="95" x2="100" y2="120" stroke="#FF6B2B" stroke-width="4"/>
-        <line x1="190" y1="105" x2="170" y2="155" stroke="#A78BFA" stroke-width="3"/>
-        <line x1="155" y1="113" x2="170" y2="155" stroke="#A78BFA" stroke-width="3"/>
-        <polygon points="170,155 165,145 175,145" fill="#A78BFA"/>
-        <line x1="100" y1="120" x2="80" y2="155" stroke="#FF6B2B" stroke-width="4"/>
-        <line x1="85" y1="148" x2="60" y2="158" stroke="#FBBF24" stroke-width="3"/>
-      </g>
-      <text x="150" y="185" fill="#A78BFA" font-size="11" text-anchor="middle" font-family="sans-serif">Hands close → Diamond shape</text>
-    </svg>`},
-  "ASdvN_XEl_c":{name:"Plank Hold",muscle:"Core · Abs · Shoulders",yt:"ASdvN_XEl_c",
-    steps:"1. Forearms on ground, elbows under shoulders<br>2. Body in straight line head to heels<br>3. Squeeze abs and glutes<br>4. Hold and breathe steadily",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <line x1="20" y1="145" x2="280" y2="145" stroke="#252540" stroke-width="2"/>
-      <style>@keyframes plankpulse{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.03)}}</style>
-      <g style="animation:plankpulse 3s ease-in-out infinite;transform-origin:150px 110px">
-        <circle cx="240" cy="95" r="16" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="240" y1="111" x2="240" y2="118" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="240" y1="118" x2="60" y2="125" stroke="#FF6B2B" stroke-width="5"/>
-        <line x1="220" y1="118" x2="205" y2="143" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="200" y1="143" x2="175" y2="143" stroke="#60A5FA" stroke-width="4"/>
-        <line x1="160" y1="121" x2="145" y2="143" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="140" y1="143" x2="115" y2="143" stroke="#60A5FA" stroke-width="4"/>
-        <line x1="80" y1="124" x2="75" y2="143" stroke="#FBBF24" stroke-width="3"/>
-        <circle cx="73" cy="145" r="5" fill="#FBBF24"/>
-        <line x1="65" y1="124" x2="60" y2="143" stroke="#FBBF24" stroke-width="3"/>
-        <circle cx="58" cy="145" r="5" fill="#FBBF24"/>
-      </g>
-      <text x="150" y="175" fill="#A78BFA" font-size="11" text-anchor="middle" font-family="sans-serif">Keep straight line • Squeeze core</text>
-    </svg>`},
-  "JB2oyawG9KQ":{name:"Leg Raises",muscle:"Lower Abs · Hip Flexors",yt:"JB2oyawG9KQ",
-    steps:"1. Lie flat on back, hands under lower back<br>2. Keep legs straight together<br>3. Raise legs to 90° — slow controlled<br>4. Lower without touching floor",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes legraise{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-70deg)}}</style>
-      <line x1="20" y1="148" x2="280" y2="148" stroke="#252540" stroke-width="2"/>
-      <circle cx="60" cy="120" r="16" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="60" y1="136" x2="180" y2="140" stroke="#FF6B2B" stroke-width="5"/>
-      <line x1="160" y1="140" x2="155" y2="147" stroke="#FBBF24" stroke-width="3"/>
-      <g style="transform-origin:180px 140px;animation:legraise 2.5s ease-in-out infinite">
-        <line x1="180" y1="140" x2="240" y2="140" stroke="#A78BFA" stroke-width="5"/>
-        <line x1="240" y1="140" x2="270" y2="140" stroke="#A78BFA" stroke-width="4"/>
-        <ellipse cx="272" cy="140" rx="6" ry="5" fill="#A78BFA"/>
-      </g>
-      <text x="150" y="175" fill="#A78BFA" font-size="11" text-anchor="middle" font-family="sans-serif">Slow up • Controlled down</text>
-    </svg>`},
-  "MKmrqcoCZ-M":{name:"Crunches",muscle:"Abs · Upper Core",yt:"MKmrqcoCZ-M",
-    steps:"1. Lie on back, knees bent, feet flat<br>2. Cross arms on chest or behind head<br>3. Lift shoulders off floor — squeeze abs<br>4. Lower slowly — don't touch floor fully",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes crunch{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-35deg)}}</style>
-      <line x1="20" y1="150" x2="280" y2="150" stroke="#252540" stroke-width="2"/>
-      <line x1="160" y1="145" x2="230" y2="145" stroke="#FBBF24" stroke-width="4"/>
-      <line x1="215" y1="140" x2="240" y2="148" stroke="#FBBF24" stroke-width="3"/>
-      <line x1="195" y1="130" x2="225" y2="145" stroke="#FBBF24" stroke-width="3"/>
-      <g style="transform-origin:160px 145px;animation:crunch 2s ease-in-out infinite">
-        <line x1="160" y1="145" x2="80" y2="145" stroke="#FF6B2B" stroke-width="5"/>
-        <circle cx="70" cy="130" r="15" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="78" y1="140" x2="100" y2="140" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="80" y1="142" x2="102" y2="142" stroke="#60A5FA" stroke-width="3"/>
-      </g>
-      <text x="150" y="180" fill="#4ADE80" font-size="11" text-anchor="middle" font-family="sans-serif">Squeeze at top • Breathe out</text>
-    </svg>`},
-  "op9kVnSso6Q":{name:"Deadlift",muscle:"Lower Back · Hamstrings · Full Body",yt:"op9kVnSso6Q",
-    steps:"1. Stand over bar, feet hip-width<br>2. Hinge at hips, grip bar outside legs<br>3. Keep back flat, chest up<br>4. Drive through heels, lock hips at top",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes deadlift{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(30px) rotate(15deg)}100%{transform:translateY(0) rotate(0deg)}}</style>
-      <line x1="20" y1="165" x2="280" y2="165" stroke="#252540" stroke-width="2"/>
-      <circle cx="120" cy="162" r="12" fill="none" stroke="#888" stroke-width="3"/>
-      <circle cx="180" cy="162" r="12" fill="none" stroke="#888" stroke-width="3"/>
-      <line x1="120" y1="162" x2="180" y2="162" stroke="#888" stroke-width="5"/>
-      <g style="transform-origin:150px 130px;animation:deadlift 2.5s ease-in-out infinite">
-        <circle cx="150" cy="45" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="63" x2="150" y2="90" stroke="#FF6B2B" stroke-width="4"/>
-        <line x1="150" y1="90" x2="150" y2="130" stroke="#FF6B2B" stroke-width="5"/>
-        <line x1="150" y1="90" x2="110" y2="120" stroke="#60A5FA" stroke-width="4"/>
-        <line x1="110" y1="120" x2="115" y2="162" stroke="#60A5FA" stroke-width="4"/>
-        <line x1="150" y1="90" x2="190" y2="120" stroke="#60A5FA" stroke-width="4"/>
-        <line x1="190" y1="120" x2="185" y2="162" stroke="#60A5FA" stroke-width="4"/>
-        <line x1="135" y1="130" x2="120" y2="162" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="165" y1="130" x2="180" y2="162" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="188" fill="#FBBF24" font-size="11" text-anchor="middle" font-family="sans-serif">Flat back • Drive through heels</text>
-    </svg>`},
-  "Dy28eq2PjpM":{name:"Barbell Squat",muscle:"Quads · Glutes · Core",yt:"Dy28eq2PjpM",
-    steps:"1. Bar on upper back, feet shoulder-width<br>2. Toes slightly out, chest tall<br>3. Squat to parallel — knees track toes<br>4. Drive through heels to stand",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes squat{0%,100%{transform:translateY(0)}50%{transform:translateY(35px)}}</style>
-      <line x1="20" y1="170" x2="280" y2="170" stroke="#252540" stroke-width="2"/>
-      <line x1="80" y1="75" x2="220" y2="75" stroke="#888" stroke-width="6"/>
-      <circle cx="75" cy="75" r="10" fill="none" stroke="#888" stroke-width="3"/>
-      <circle cx="225" cy="75" r="10" fill="none" stroke="#888" stroke-width="3"/>
-      <g style="transform-origin:150px 100px;animation:squat 2.5s ease-in-out infinite">
-        <circle cx="150" cy="50" r="17" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="67" x2="150" y2="85" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="80" x2="150" y2="115" stroke="#FF6B2B" stroke-width="5"/>
-        <line x1="150" y1="115" x2="120" y2="148" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="120" y1="148" x2="125" y2="168" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="150" y1="115" x2="180" y2="148" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="180" y1="148" x2="175" y2="168" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="188" fill="#FBBF24" font-size="11" text-anchor="middle" font-family="sans-serif">Knees track toes • Chest up</text>
-    </svg>`},
-  "YSxHifyI6s8":{name:"Kettlebell Swing",muscle:"Glutes · Back · Core · Cardio",yt:"YSxHifyI6s8",
-    steps:"1. Hinge at hips, KB between legs<br>2. Snap hips forward explosively<br>3. Swing KB to shoulder height<br>4. Let KB swing back — hinge again",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes kbswing{0%{transform:rotate(30deg)}50%{transform:rotate(-50deg)}100%{transform:rotate(30deg)}}</style>
-      <line x1="20" y1="165" x2="280" y2="165" stroke="#252540" stroke-width="2"/>
-      <circle cx="150" cy="45" r="17" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="150" y1="62" x2="150" y2="85" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="150" y1="80" x2="150" y2="120" stroke="#FF6B2B" stroke-width="5"/>
-      <line x1="150" y1="120" x2="120" y2="162" stroke="#FBBF24" stroke-width="4"/>
-      <line x1="150" y1="120" x2="180" y2="162" stroke="#FBBF24" stroke-width="4"/>
-      <g style="transform-origin:150px 90px;animation:kbswing 1.8s ease-in-out infinite">
-        <line x1="150" y1="90" x2="185" y2="115" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="90" x2="115" y2="115" stroke="#60A5FA" stroke-width="3"/>
-        <rect x="140" y="120" width="20" height="25" rx="4" fill="none" stroke="#34D399" stroke-width="3"/>
-        <line x1="144" y1="120" x2="156" y2="120" stroke="#34D399" stroke-width="4"/>
-      </g>
-      <text x="150" y="185" fill="#34D399" font-size="11" text-anchor="middle" font-family="sans-serif">Hip snap • Not arm lift</text>
-    </svg>`},
-  "wkD8rjkodUI":{name:"Russian Twist",muscle:"Obliques · Core",yt:"wkD8rjkodUI",
-    steps:"1. Sit with knees bent, lean back 45°<br>2. Lift feet off floor (harder) or keep down<br>3. Rotate torso side to side<br>4. Touch floor on each side",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes twist{0%{transform:rotate(-30deg)}50%{transform:rotate(30deg)}100%{transform:rotate(-30deg)}}</style>
-      <line x1="20" y1="150" x2="280" y2="150" stroke="#252540" stroke-width="2"/>
-      <line x1="100" y1="150" x2="160" y2="150" stroke="#FBBF24" stroke-width="5"/>
-      <line x1="160" y1="150" x2="200" y2="135" stroke="#FBBF24" stroke-width="4"/>
-      <line x1="200" y1="133" x2="218" y2="149" stroke="#FBBF24" stroke-width="3"/>
-      <g style="transform-origin:130px 120px;animation:twist 2s ease-in-out infinite">
-        <circle cx="115" cy="90" r="16" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="115" y1="106" x2="130" y2="120" stroke="#FF6B2B" stroke-width="4"/>
-        <line x1="130" y1="120" x2="130" y2="150" stroke="#FF6B2B" stroke-width="4"/>
-        <line x1="115" y1="110" x2="85" y2="125" stroke="#A78BFA" stroke-width="3"/>
-        <line x1="115" y1="110" x2="155" y2="125" stroke="#A78BFA" stroke-width="3"/>
-      </g>
-      <text x="150" y="178" fill="#A78BFA" font-size="11" text-anchor="middle" font-family="sans-serif">Rotate from core • Not shoulders</text>
-    </svg>`},
-  "3VcKaXpzqRo":{name:"Lateral Raise",muscle:"Side Deltoids · Shoulders",yt:"3VcKaXpzqRo",
-    steps:"1. Stand tall, dumbbells at sides<br>2. Raise arms to shoulder height<br>3. Slight bend in elbows, lead with elbows<br>4. Lower slowly — 3 seconds down",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes lateraise{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-70deg)}}</style>
-      <line x1="20" y1="170" x2="280" y2="170" stroke="#252540" stroke-width="2"/>
-      <circle cx="150" cy="50" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="150" y1="68" x2="150" y2="90" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="150" y1="90" x2="150" y2="130" stroke="#FF6B2B" stroke-width="5"/>
-      <line x1="150" y1="130" x2="130" y2="168" stroke="#FBBF24" stroke-width="4"/>
-      <line x1="150" y1="130" x2="170" y2="168" stroke="#FBBF24" stroke-width="4"/>
-      <g style="transform-origin:150px 95px;animation:lateraise 2.5s ease-in-out infinite">
-        <line x1="150" y1="95" x2="210" y2="95" stroke="#60A5FA" stroke-width="4"/>
-        <rect x="210" y="90" width="14" height="10" rx="3" fill="#60A5FA"/>
-      </g>
-      <g style="transform-origin:150px 95px;animation:lateraise 2.5s ease-in-out infinite;transform:scaleX(-1)">
-        <line x1="150" y1="95" x2="210" y2="95" stroke="#60A5FA" stroke-width="4"/>
-        <rect x="210" y="90" width="14" height="10" rx="3" fill="#60A5FA"/>
-      </g>
-      <text x="150" y="190" fill="#60A5FA" font-size="11" text-anchor="middle" font-family="sans-serif">Lead with elbows • Slow down</text>
-    </svg>`},
-  "ykJmrZ5v0Oo":{name:"Bicep Curl",muscle:"Biceps · Forearms",yt:"ykJmrZ5v0Oo",
-    steps:"1. Stand tall, dumbbells at sides<br>2. Keep upper arms fixed to body<br>3. Curl up — squeeze at top 1 sec<br>4. Lower slowly — 3 seconds",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes curl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-110deg)}}</style>
-      <line x1="20" y1="170" x2="280" y2="170" stroke="#252540" stroke-width="2"/>
-      <circle cx="150" cy="45" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="150" y1="63" x2="150" y2="85" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="150" y1="85" x2="150" y2="130" stroke="#FF6B2B" stroke-width="5"/>
-      <line x1="150" y1="130" x2="128" y2="168" stroke="#FBBF24" stroke-width="4"/>
-      <line x1="150" y1="130" x2="172" y2="168" stroke="#FBBF24" stroke-width="4"/>
-      <line x1="175" y1="90" x2="175" y2="130" stroke="#888" stroke-width="3"/>
-      <g style="transform-origin:175px 90px;animation:curl 2s ease-in-out infinite">
-        <line x1="175" y1="90" x2="175" y2="130" stroke="#34D399" stroke-width="4"/>
-        <rect x="167" y="125" width="16" height="10" rx="3" fill="#34D399"/>
-      </g>
-      <text x="150" y="190" fill="#34D399" font-size="11" text-anchor="middle" font-family="sans-serif">Squeeze at top • Slow lower</text>
-    </svg>`},
-  "gwLzBkvS11Y":{name:"Calf Raises",muscle:"Calves · Lower Legs",yt:"gwLzBkvS11Y",
-    steps:"1. Stand with feet hip-width<br>2. Rise up on toes as high as possible<br>3. Hold 1 second at top<br>4. Lower slowly — full stretch",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes calfrise{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}</style>
-      <line x1="20" y1="170" x2="280" y2="170" stroke="#252540" stroke-width="2"/>
-      <g style="animation:calfrise 2s ease-in-out infinite">
-        <circle cx="150" cy="45" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="63" x2="150" y2="85" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="85" x2="150" y2="125" stroke="#FF6B2B" stroke-width="5"/>
-        <line x1="140" y1="95" x2="110" y2="110" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="160" y1="95" x2="190" y2="110" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="125" x2="130" y2="158" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="130" y1="158" x2="128" y2="170" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="150" y1="125" x2="170" y2="158" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="170" y1="158" x2="172" y2="170" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="188" fill="#6EE7B7" font-size="11" text-anchor="middle" font-family="sans-serif">Rise high • Full stretch down</text>
-    </svg>`},
-  "_k8B37bQH4k":{name:"Jump Rope",muscle:"Full Body Cardio · Calves · Core",yt:"_k8B37bQH4k",
-    steps:"1. Hold handles at hip level<br>2. Jump 2-3 cm off ground<br>3. Wrists rotate — not arms<br>4. Stay on balls of feet",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>
-        @keyframes jump{0%,100%{transform:translateY(0)}50%{transform:translateY(-25px)}}
-        @keyframes rope{0%{d:path("M60,130 Q150,180 240,130")}50%{d:path("M60,130 Q150,80 240,130")}100%{d:path("M60,130 Q150,180 240,130")}}
-      </style>
-      <path d="M60,130 Q150,80 240,130" fill="none" stroke="#34D399" stroke-width="3" style="animation:rope 0.8s ease-in-out infinite"/>
-      <g style="animation:jump 0.8s ease-in-out infinite">
-        <circle cx="150" cy="50" r="18" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="68" x2="150" y2="90" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="90" x2="150" y2="125" stroke="#FF6B2B" stroke-width="5"/>
-        <line x1="150" y1="95" x2="60" y2="115" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="95" x2="240" y2="115" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="125" x2="135" y2="165" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="150" y1="125" x2="165" y2="165" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="188" fill="#34D399" font-size="11" text-anchor="middle" font-family="sans-serif">Wrists rotate • Stay on toes</text>
-    </svg>`},
-  "nmwgirgXLYM":{name:"Mountain Climbers",muscle:"Core · Cardio · Shoulders",yt:"nmwgirgXLYM",
-    steps:"1. Start in high plank position<br>2. Drive right knee to chest fast<br>3. Switch — drive left knee<br>4. Keep hips level, core tight",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>
-        @keyframes legR{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-60deg)}}
-        @keyframes legL{0%,100%{transform:rotate(-60deg)}50%{transform:rotate(0deg)}}
-      </style>
-      <line x1="20" y1="160" x2="280" y2="160" stroke="#252540" stroke-width="2"/>
-      <circle cx="240" cy="70" r="16" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="240" y1="86" x2="240" y2="98" stroke="#FF6B2B" stroke-width="3"/>
-      <line x1="240" y1="98" x2="80" y2="118" stroke="#FF6B2B" stroke-width="5"/>
-      <line x1="225" y1="100" x2="220" y2="155" stroke="#60A5FA" stroke-width="3"/>
-      <circle cx="218" cy="158" r="5" fill="#60A5FA"/>
-      <line x1="115" y1="115" x2="110" y2="155" stroke="#60A5FA" stroke-width="3"/>
-      <circle cx="108" cy="158" r="5" fill="#60A5FA"/>
-      <g style="transform-origin:165px 115px;animation:legR 0.9s ease-in-out infinite">
-        <line x1="165" y1="115" x2="195" y2="145" stroke="#A78BFA" stroke-width="4"/>
-        <line x1="195" y1="145" x2="195" y2="160" stroke="#A78BFA" stroke-width="4"/>
-      </g>
-      <g style="transform-origin:145px 117px;animation:legL 0.9s ease-in-out infinite">
-        <line x1="145" y1="117" x2="115" y2="147" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="115" y1="147" x2="115" y2="160" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="185" fill="#A78BFA" font-size="11" text-anchor="middle" font-family="sans-serif">Drive knees fast • Core tight</text>
-    </svg>`},
-  "dZgVxmf6jkA":{name:"Burpees",muscle:"Full Body · Cardio",yt:"dZgVxmf6jkA",
-    steps:"1. Stand → drop hands to floor<br>2. Jump feet back to plank<br>3. Do 1 push-up<br>4. Jump feet to hands → jump up + clap",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes burpee{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(30px) scale(0.8)}50%{transform:translateY(40px) scale(0.7)}75%{transform:translateY(-20px) scale(1.1)}}</style>
-      <line x1="20" y1="160" x2="280" y2="160" stroke="#252540" stroke-width="2"/>
-      <g style="animation:burpee 2s ease-in-out infinite;transform-origin:150px 100px">
-        <circle cx="150" cy="45" r="18" fill="none" stroke="#FB923C" stroke-width="3"/>
-        <line x1="150" y1="63" x2="150" y2="90" stroke="#FB923C" stroke-width="4"/>
-        <line x1="150" y1="90" x2="150" y2="130" stroke="#FB923C" stroke-width="5"/>
-        <line x1="150" y1="95" x2="110" y2="120" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="95" x2="190" y2="100" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="130" x2="128" y2="160" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="150" y1="130" x2="172" y2="160" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="188" fill="#FB923C" font-size="11" text-anchor="middle" font-family="sans-serif">Drop • Plank • Push • Jump!</text>
-    </svg>`},
-  "kqnua4rHVVA":{name:"Cat-Cow Stretch",muscle:"Spine · Back Mobility",yt:"kqnua4rHVVA",
-    steps:"1. On all fours — hands under shoulders<br>2. CAT: round spine upward — exhale<br>3. COW: arch back downward — inhale<br>4. Flow slowly with breath",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes catcow{0%,100%{d:path("M60,110 Q120,80 180,90 Q220,95 240,110")}50%{d:path("M60,110 Q120,140 180,130 Q220,125 240,110")}}</style>
-      <line x1="20" y1="155" x2="280" y2="155" stroke="#252540" stroke-width="2"/>
-      <circle cx="245" cy="95" r="14" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-      <path d="M60,110 Q120,80 180,90 Q220,95 240,110" fill="none" stroke="#FF6B2B" stroke-width="5" style="animation:catcow 3s ease-in-out infinite"/>
-      <line x1="85" y1="108" x2="80" y2="148" stroke="#60A5FA" stroke-width="3"/>
-      <line x1="70" y1="108" x2="65" y2="148" stroke="#60A5FA" stroke-width="3"/>
-      <line x1="220" y1="112" x2="215" y2="148" stroke="#60A5FA" stroke-width="3"/>
-      <line x1="205" y1="112" x2="200" y2="148" stroke="#60A5FA" stroke-width="3"/>
-      <text x="150" y="178" fill="#6EE7B7" font-size="11" text-anchor="middle" font-family="sans-serif">Flow with breath • No rush</text>
-    </svg>`},
-  "default":{name:"Exercise Demo",muscle:"Full Body",yt:"",
-    steps:"1. Focus on proper form<br>2. Control the movement<br>3. Breathe throughout<br>4. Quality over speed",
-    anim:`<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-      <rect width="300" height="200" fill="#07070F"/>
-      <style>@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}</style>
-      <g style="animation:breathe 3s ease-in-out infinite;transform-origin:150px 100px">
-        <circle cx="150" cy="50" r="20" fill="none" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="70" x2="150" y2="95" stroke="#FF6B2B" stroke-width="3"/>
-        <line x1="150" y1="90" x2="150" y2="130" stroke="#FF6B2B" stroke-width="5"/>
-        <line x1="150" y1="95" x2="110" y2="118" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="95" x2="190" y2="118" stroke="#60A5FA" stroke-width="3"/>
-        <line x1="150" y1="130" x2="128" y2="165" stroke="#FBBF24" stroke-width="4"/>
-        <line x1="150" y1="130" x2="172" y2="165" stroke="#FBBF24" stroke-width="4"/>
-      </g>
-      <text x="150" y="190" fill="#FF6B2B" font-size="11" text-anchor="middle" font-family="sans-serif">Focus on form • Control the rep</text>
-    </svg>`}
+  "IODxDxX7oi4":{name:"Push-Ups",muscle:"Chest · Triceps · Shoulders",yt:"IODxDxX7oi4",anim:"pushup",steps:"1. Start in plank — hands shoulder-width<br>2. Lower chest to floor — 2 sec down<br>3. Push back up explosively<br>4. Keep core tight throughout"},
+  "J0DXBSpghaI":{name:"Diamond Push-Ups",muscle:"Triceps · Inner Chest",yt:"J0DXBSpghaI",anim:"pushup",steps:"1. Form diamond with index fingers and thumbs<br>2. Keep elbows tight to body<br>3. Lower chest to hands — controlled<br>4. Push up and squeeze triceps at top"},
+  "RZFP0M5GkjI":{name:"Wide Push-Ups",muscle:"Outer Chest · Shoulders",yt:"RZFP0M5GkjI",anim:"pushup",steps:"1. Place hands wider than shoulder-width<br>2. Lower chest slowly to floor<br>3. Feel stretch across chest at bottom<br>4. Push up and squeeze chest"},
+  "ASdvN_XEl_c":{name:"Plank Hold",muscle:"Core · Abs · Shoulders · Glutes",yt:"ASdvN_XEl_c",anim:"plank",steps:"1. Forearms on ground, elbows under shoulders<br>2. Body in straight line head to heels<br>3. Squeeze abs and glutes tight<br>4. Hold and breathe steadily"},
+  "JB2oyawG9KQ":{name:"Leg Raises",muscle:"Lower Abs · Hip Flexors",yt:"JB2oyawG9KQ",anim:"legraise",steps:"1. Lie flat, hands under lower back<br>2. Keep legs straight together<br>3. Raise legs to 90° — slow controlled<br>4. Lower without touching floor"},
+  "MKmrqcoCZ-M":{name:"Crunches",muscle:"Upper Abs · Rectus Abdominis",yt:"MKmrqcoCZ-M",anim:"crunch",steps:"1. Lie on back, knees bent, feet flat<br>2. Cross arms on chest or behind head<br>3. Lift shoulders off floor — squeeze abs<br>4. Lower slowly — don't fully touch floor"},
+  "wkD8rjkodUI":{name:"Russian Twist",muscle:"Obliques · Core",yt:"wkD8rjkodUI",anim:"russianTwist",steps:"1. Sit with knees bent, lean back 45°<br>2. Lift feet off floor for extra challenge<br>3. Rotate torso fully side to side<br>4. Touch floor on each side"},
+  "1we3bh9uhqY":{name:"Bicycle Crunches",muscle:"Abs · Obliques",yt:"1we3bh9uhqY",anim:"crunch",steps:"1. Lie on back, hands behind head<br>2. Bring right elbow to left knee<br>3. Alternate sides in cycling motion<br>4. Keep lower back pressed to floor"},
+  "iP2fjvG0g3w":{name:"V-Ups",muscle:"Full Abs · Hip Flexors",yt:"iP2fjvG0g3w",anim:"legraise",steps:"1. Lie flat, arms overhead<br>2. Simultaneously lift legs and torso<br>3. Touch hands to feet at top (V shape)<br>4. Lower with control — don't crash down"},
+  "nmwgirgXLYM":{name:"Mountain Climbers",muscle:"Core · Cardio · Shoulders",yt:"nmwgirgXLYM",anim:"mountainClimber",steps:"1. Start in high plank position<br>2. Drive right knee to chest explosively<br>3. Switch — drive left knee fast<br>4. Keep hips level, core engaged"},
+  "op9kVnSso6Q":{name:"Barbell Deadlift",muscle:"Lower Back · Hamstrings · Glutes",yt:"op9kVnSso6Q",anim:"deadlift",steps:"1. Stand over bar, feet hip-width<br>2. Hinge at hips, grip bar outside legs<br>3. Keep back flat, chest up tall<br>4. Drive through heels, lock hips at top"},
+  "Dy28eq2PjpM":{name:"Barbell Squat",muscle:"Quads · Glutes · Core",yt:"Dy28eq2PjpM",anim:"squat",steps:"1. Bar on upper back, feet shoulder-width<br>2. Toes slightly out, chest tall<br>3. Squat to parallel — knees track toes<br>4. Drive through heels to stand"},
+  "MxsFDJRrmr8":{name:"Goblet Squat",muscle:"Quads · Glutes · Core",yt:"MxsFDJRrmr8",anim:"squat",steps:"1. Hold KB at chest level, elbows down<br>2. Feet shoulder-width, toes out slightly<br>3. Squat deep — elbows inside knees<br>4. Drive up through heels"},
+  "ykJmrZ5v0Oo":{name:"Bicep Curl",muscle:"Biceps · Forearms",yt:"ykJmrZ5v0Oo",anim:"curl",steps:"1. Stand tall, dumbbells at sides<br>2. Keep upper arms fixed to body<br>3. Curl up — squeeze hard at top 1 sec<br>4. Lower slowly — 3 seconds down"},
+  "zC3nLlEvin4":{name:"Hammer Curl",muscle:"Biceps · Brachialis · Forearms",yt:"zC3nLlEvin4",anim:"curl",steps:"1. Palms facing each other (neutral grip)<br>2. Keep elbows tight at sides<br>3. Curl both simultaneously or alternate<br>4. Squeeze at top — slow negative"},
+  "9efgcAjQe7E":{name:"Barbell Bent-Over Row",muscle:"Upper Back · Lats · Biceps",yt:"9efgcAjQe7E",anim:"deadlift",steps:"1. Hinge forward 45°, back flat<br>2. Grip bar shoulder-width, overhand<br>3. Row bar to lower chest — squeeze back<br>4. Lower with control"},
+  "YSxHifyI6s8":{name:"Kettlebell Swing",muscle:"Glutes · Posterior Chain · Cardio",yt:"YSxHifyI6s8",anim:"kettlebell",steps:"1. Hinge at hips, KB between legs<br>2. Snap hips forward explosively<br>3. Swing KB to shoulder height naturally<br>4. Let KB swing back — hinge again"},
+  "KJSa3ENzfAY":{name:"Band Pull-Apart",muscle:"Rear Delts · Upper Back",yt:"KJSa3ENzfAY",anim:"lateraise",steps:"1. Hold band at shoulder height, arms straight<br>2. Pull band apart — squeeze shoulder blades<br>3. Hold 1 second at full stretch<br>4. Return slowly under control"},
+  "3VcKaXpzqRo":{name:"Lateral Raise",muscle:"Side Deltoids · Shoulders",yt:"3VcKaXpzqRo",anim:"lateraise",steps:"1. Stand tall, dumbbells at sides<br>2. Raise arms to shoulder height<br>3. Slight bend in elbows, lead with elbows<br>4. Lower slowly — 3 seconds down"},
+  "B-aVuyhvLHU":{name:"Shoulder Press",muscle:"Shoulders · Triceps · Upper Body",yt:"B-aVuyhvLHU",anim:"lateraise",steps:"1. Hold dumbbells at shoulder level<br>2. Press straight up overhead<br>3. Don't lock elbows fully at top<br>4. Lower slowly to starting position"},
+  "QOVaHwm-Q6U":{name:"Walking Lunges",muscle:"Quads · Glutes · Hamstrings",yt:"QOVaHwm-Q6U",anim:"squat",steps:"1. Stand tall, step forward with right foot<br>2. Lower back knee toward floor<br>3. Front thigh parallel to floor<br>4. Push through front heel, step through"},
+  "gwLzBkvS11Y":{name:"Calf Raises",muscle:"Calves · Gastrocnemius · Soleus",yt:"gwLzBkvS11Y",anim:"calfRaise",steps:"1. Stand with feet hip-width apart<br>2. Rise up on toes as high as possible<br>3. Hold 1 second at peak contraction<br>4. Lower slowly — full stretch at bottom"},
+  "wPM8icPu6H8":{name:"Glute Bridge",muscle:"Glutes · Hamstrings · Core",yt:"wPM8icPu6H8",anim:"legraise",steps:"1. Lie on back, knees bent, feet flat<br>2. Drive hips up by squeezing glutes<br>3. Hold at top — squeeze hard 2 seconds<br>4. Lower with control"},
+  "_k8B37bQH4k":{name:"Jump Rope",muscle:"Full Body Cardio · Calves · Core",yt:"_k8B37bQH4k",anim:"jumpRope",steps:"1. Hold handles at hip level<br>2. Jump only 2-3 cm off ground<br>3. Wrists rotate rope — not arms<br>4. Stay on balls of feet throughout"},
+  "dZgVxmf6jkA":{name:"Burpees",muscle:"Full Body · Cardio · Explosive Power",yt:"dZgVxmf6jkA",anim:"burpee",steps:"1. Stand → drop hands to floor fast<br>2. Jump feet back to plank position<br>3. Do 1 push-up (optional)<br>4. Jump feet to hands → jump up + clap"},
+  "ZZZoCNMU48U":{name:"High Knees",muscle:"Cardio · Hip Flexors · Core",yt:"ZZZoCNMU48U",anim:"mountainClimber",steps:"1. Run in place with exaggerated knee drive<br>2. Drive knees to hip height each step<br>3. Pump arms in opposition<br>4. Stay on balls of feet — fast pace"},
+  "c4DAnQ6DtF8":{name:"Jumping Jacks",muscle:"Full Body Cardio · Coordination",yt:"c4DAnQ6DtF8",anim:"burpee",steps:"1. Start with feet together, arms at sides<br>2. Jump feet wide while raising arms overhead<br>3. Jump back to starting position<br>4. Keep consistent rhythm throughout"},
+  "kqnua4rHVVA":{name:"Cat-Cow Stretch",muscle:"Spine · Back Mobility · Core",yt:"kqnua4rHVVA",anim:"catcow",steps:"1. On all fours — hands under shoulders<br>2. CAT: Round spine upward — exhale fully<br>3. COW: Arch back downward — inhale deep<br>4. Flow slowly with your breath"},
+  "eqVMAPM00DM":{name:"Child's Pose",muscle:"Back · Hips · Shoulders",yt:"eqVMAPM00DM",anim:"catcow",steps:"1. Kneel and sit back on heels<br>2. Reach arms forward on floor<br>3. Rest forehead on mat<br>4. Hold and breathe deeply into back"},
+  "cc6UVRS7om0":{name:"Superman Hold",muscle:"Lower Back · Glutes · Posterior",yt:"cc6UVRS7om0",anim:"plank",steps:"1. Lie face down, arms extended overhead<br>2. Simultaneously lift arms, chest, legs<br>3. Squeeze glutes and back muscles<br>4. Hold 2-3 seconds — lower slowly"},
+  "gqDRM4bHUIg":{name:"Neck Rotations",muscle:"Neck · Cervical Spine",yt:"gqDRM4bHUIg",anim:"default",steps:"1. Sit or stand tall, shoulders relaxed<br>2. Slowly roll head side to side<br>3. Forward and back gentle rolls<br>4. No fast or jerky movements"},
+  "pKHGD3rGzPk":{name:"Chin Tucks",muscle:"Deep Neck Flexors · Posture",yt:"pKHGD3rGzPk",anim:"default",steps:"1. Sit tall, eyes forward<br>2. Gently pull chin straight back<br>3. Feel stretch at back of neck<br>4. Hold 3 seconds — release slowly"},
+  "m4ytaCJZplE":{name:"Front Squat",muscle:"Quads · Core · Shoulders",yt:"m4ytaCJZplE",anim:"squat",steps:"1. Bar on front of shoulders, elbows high<br>2. Keep torso upright, chest tall<br>3. Squat to parallel or below<br>4. Drive straight up through heels"},
+  "vs4pFGo1KYo":{name:"KB Clean & Press",muscle:"Shoulders · Core · Full Body",yt:"vs4pFGo1KYo",anim:"kettlebell",steps:"1. Hike KB back between legs<br>2. Clean it to rack position at shoulder<br>3. Press overhead extending arm fully<br>4. Reverse the movement with control"},
+  "0326dy_-CzM":{name:"Tricep Dips",muscle:"Triceps · Chest · Shoulders",yt:"0326dy_-CzM",anim:"pushup",steps:"1. Grip bar/chair behind you, arms straight<br>2. Lower body by bending elbows<br>3. Go to 90° — feel tricep stretch<br>4. Push up driving through palms"},
+  "I9T1P0Sfxco":{name:"Floor Press",muscle:"Chest · Triceps · Shoulders",yt:"I9T1P0Sfxco",anim:"pushup",steps:"1. Lie on floor, dumbbells at chest<br>2. Press up — don't lock elbows<br>3. Lower until arms touch floor<br>4. Pause 1 sec — press again"},
+  "Kj_XZQP7ypU":{name:"Band Chest Flyes",muscle:"Chest · Anterior Deltoid",yt:"Kj_XZQP7ypU",anim:"pushup",steps:"1. Anchor band behind you at chest height<br>2. Step forward, arms open wide<br>3. Bring hands together in front<br>4. Slow return — feel chest stretch"},
+  "YQmpIO8RsN8":{name:"Hip Flexor Stretch",muscle:"Hip Flexors · Psoas · Quads",yt:"YQmpIO8RsN8",anim:"squat",steps:"1. Kneel on one knee, other foot forward<br>2. Push hips forward gently<br>3. Feel stretch at front of kneeling hip<br>4. Hold 30-60 seconds — breathe"},
+  "v4OGKQpTAqg":{name:"Forward Fold",muscle:"Hamstrings · Lower Back · Calves",yt:"v4OGKQpTAqg",anim:"catcow",steps:"1. Stand tall, feet hip-width<br>2. Hinge at hips — fold forward<br>3. Let gravity pull you down naturally<br>4. Bend knees if hamstrings are tight"},
+  "aDvRlCTJRbE":{name:"Straddle Stretch",muscle:"Inner Groin · Adductors · Hips",yt:"aDvRlCTJRbE",anim:"legraise",steps:"1. Sit on floor, legs spread wide<br>2. Slowly walk hands forward<br>3. Breathe and let hips open<br>4. Hold — go deeper each exhale"},
+  "gBv2REpR-EA":{name:"Glute Kickback",muscle:"Glutes · Hamstrings",yt:"gBv2REpR-EA",anim:"catcow",steps:"1. On all fours, core tight<br>2. Kick one leg straight back and up<br>3. Squeeze glute at top — hold 1 sec<br>4. Lower slowly — repeat"},
+  "B8p0ADv7Kj4":{name:"Pigeon Pose",muscle:"Hip Flexors · Glutes · Piriformis",yt:"B8p0ADv7Kj4",anim:"catcow",steps:"1. Bring shin across front of body<br>2. Extend back leg straight behind<br>3. Lower torso over front shin<br>4. Hold 45-60 seconds each side"},
+  "6SS6K3lAwZ8":{name:"Tricep Kickback",muscle:"Triceps · Arm Definition",yt:"6SS6K3lAwZ8",anim:"deadlift",steps:"1. Hinge forward 45°, upper arm parallel to floor<br>2. Extend forearm back until arm is straight<br>3. Squeeze tricep at full extension<br>4. Return slowly — control the bend"},
+  "HKEbUImqTfc":{name:"Reverse Snow Angels",muscle:"Upper Back · Rear Delts · Posture",yt:"HKEbUImqTfc",anim:"plank",steps:"1. Lie face down, arms at sides palms up<br>2. Raise arms and sweep to overhead<br>3. Keep arms slightly off ground<br>4. Return slowly — squeeze back"},
 };
 
 function openV(id){
@@ -1584,7 +2102,7 @@ function openV(id){
   document.getElementById("vOv-title").textContent=demo.name;
   document.getElementById("vOv-muscle").textContent=demo.muscle;
   document.getElementById("vOv-steps").innerHTML=demo.steps;
-  document.getElementById("vOv-anim").innerHTML=demo.anim||DEMOS["default"].anim;
+  document.getElementById("vOv-anim").innerHTML=humanSVG(demo.anim||"default",getWOTemplate()[today].c||"#FF6B2B");
   var ytLink=document.getElementById("vOv-ytlink");
   if(demo.yt||id){ytLink.href="https://www.youtube.com/watch?v="+(demo.yt||id);ytLink.style.display="flex";}
   else ytLink.style.display="none";
