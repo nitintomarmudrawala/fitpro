@@ -1,39 +1,78 @@
 {
-  "name": "FitPro — Personal Fitness Coach",
+  "name": "FitPro - Personal Trainer",
   "short_name": "FitPro",
-  "description": "Personalized fitness app with workouts, nutrition, body tracking and splits training. BMI-based plans for male and female.",
+  "description": "Your personal gym & fitness tracker. BMI-based workout plans, Indian meal plans, progress tracking.",
   "start_url": "/fitpro/",
   "scope": "/fitpro/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait",
   "background_color": "#07070F",
   "theme_color": "#FF6B2B",
-  "orientation": "portrait-primary",
   "lang": "en",
-  "id": "/fitpro/",
-  "categories": ["health", "fitness", "lifestyle"],
+  "categories": ["health", "fitness"],
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "192x192",
+      "src": "icons/icon-72.png",
+      "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "icon.png",
+      "src": "icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
-  "shortcuts": [
+  "screenshots": [
     {
-      "name": "Today's Workout",
-      "short_name": "Workout",
-      "description": "Go to today's workout",
-      "url": "/fitpro/",
-      "icons": [{ "src": "icon.png", "sizes": "512x512" }]
+      "src": "screenshots/home.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "label": "Home Screen"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.nitin.fitpro"
     }
   ]
 }
