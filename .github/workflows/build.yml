@@ -44,11 +44,47 @@ jobs:
             -keypass fitpro123 \
             -dname "CN=FitPro, OU=Dev, O=Mudrawala, L=India, S=India, C=IN"
 
-      - name: Pre-configure Bubblewrap (skip JDK/SDK prompts)
+      - name: Pre-configure Bubblewrap
         run: |
           mkdir -p ~/.bubblewrap
           echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
           cat ~/.bubblewrap/config.json
+
+      - name: Generate PWA icons and start local server
+        run: |
+          mkdir -p /tmp/fitpro-icons
+          python3 << 'PYEOF'
+          import struct, zlib, os
+          def create_png(w, h, bg=(7,7,15), fg=(255,107,43)):
+              cx, cy, r = w//2, h//2, min(w,h)//2-4
+              rows = []
+              for y in range(h):
+                  row = []
+                  for x in range(w):
+                      if ((x-cx)**2+(y-cy)**2)**0.5 <= r:
+                          row.extend(fg)
+                      else:
+                          row.extend(bg)
+                  rows.append(bytes(row))
+              def chunk(n, d):
+                  c = n+d
+                  return struct.pack('>I',len(d))+c+struct.pack('>I',zlib.crc32(c)&0xffffffff)
+              raw = b''.join(b'\x00'+r for r in rows)
+              png = b'\x89PNG\r\n\x1a\n'
+              png += chunk(b'IHDR', struct.pack('>IIBBBBB',w,h,8,2,0,0,0))
+              png += chunk(b'IDAT', zlib.compress(raw,9))
+              png += chunk(b'IEND', b'')
+              return png
+          for size in [72,96,128,144,152,192,384,512]:
+              data = create_png(size,size)
+              with open(f'/tmp/fitpro-icons/icon-{size}.png','wb') as f:
+                  f.write(data)
+              print(f'Created icon-{size}.png ({len(data)} bytes)')
+          PYEOF
+          python3 -m http.server 9876 --directory /tmp/fitpro-icons &
+          sleep 2
+          echo "Icon server status:"
+          curl -s -o /dev/null -w "HTTP %{http_code}" http://localhost:9876/icon-512.png
 
       - name: Create twa-manifest.json and generate project
         run: |
@@ -69,9 +105,9 @@ jobs:
             "backgroundColor": "#07070F",
             "enableNotifications": false,
             "startUrl": "/fitpro/",
-            "iconUrl": "https://nitintomarmudrawala.github.io/fitpro/icons/icon-512.png",
-            "maskableIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icons/icon-512.png",
-            "monochromeIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icons/icon-512.png",
+            "iconUrl": "http://localhost:9876/icon-512.png",
+            "maskableIconUrl": "http://localhost:9876/icon-512.png",
+            "monochromeIconUrl": "http://localhost:9876/icon-512.png",
             "appVersion": "1.0.0",
             "appVersionCode": 1,
             "signingKey": {
