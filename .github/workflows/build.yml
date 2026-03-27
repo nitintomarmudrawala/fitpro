@@ -18,10 +18,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Install Bubblewrap CLI
@@ -45,10 +45,13 @@ jobs:
             -keypass fitpro123 \
             -dname "CN=FitPro, OU=Dev, O=Mudrawala, L=India, S=India, C=IN"
 
-      - name: Create TWA manifest
+      - name: Create TWA manifest and init project
         run: |
           mkdir -p fitpro-twa
-          cat > fitpro-twa/twa-manifest.json << 'MANIFEST_EOF'
+          cd fitpro-twa
+          bubblewrap init --manifest https://nitintomarmudrawala.github.io/fitpro/manifest.json --directory . || true
+          # Override with our exact config
+          cat > twa-manifest.json << 'MANIFEST_EOF'
           {
             "packageId": "com.nitin.fitpro",
             "host": "nitintomarmudrawala.github.io",
@@ -91,15 +94,10 @@ jobs:
           }
           MANIFEST_EOF
 
-      - name: Initialize Bubblewrap project
-        run: |
-          cd fitpro-twa
-          bubblewrap init --manifest https://nitintomarmudrawala.github.io/fitpro/manifest.json --directory . || true
-
       - name: Build APK
+        working-directory: fitpro-twa
         run: |
-          cd fitpro-twa
-          echo "fitpro123" | bubblewrap build --skipPwaValidation
+          bubblewrap build --skipPwaValidation
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: fitpro123
           BUBBLEWRAP_KEY_PASSWORD: fitpro123
