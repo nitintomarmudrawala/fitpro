@@ -119,7 +119,7 @@ jobs:
             "isChromeOSOnly": false,
             "isMetaQuest": false,
             "fullScopeUrl": "https://nitintomarmudrawala.github.io/fitpro/",
-            "minSdkVersion": 19,
+            "minSdkVersion": 21,
             "targetSdkVersion": 33,
             "shortcuts": [],
             "generatorApp": "bubblewrap-cli",
