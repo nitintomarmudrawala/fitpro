@@ -42,13 +42,14 @@ jobs:
             -validity 10000 \
             -storepass fitpro123 \
             -keypass fitpro123 \
+            -storetype JKS \
             -dname "CN=FitPro, OU=Dev, O=Mudrawala, L=India, S=India, C=IN"
+          keytool -list -keystore fitpro-release-key.keystore -storepass fitpro123 -storetype JKS
 
       - name: Pre-configure Bubblewrap
         run: |
           mkdir -p ~/.bubblewrap
           echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
-          cat ~/.bubblewrap/config.json
 
       - name: Generate PWA icons and start local server
         run: |
@@ -83,9 +84,9 @@ jobs:
           PYEOF
           python3 -m http.server 9876 --bind 127.0.0.1 --directory /tmp/fitpro-icons &
           sleep 2
-          curl -s -o /dev/null -w "Icon server HTTP %{http_code}\n" http://127.0.0.1:9876/icon-512.png
+          curl -s -o /dev/null -w "Icon server: HTTP %{http_code}\n" http://127.0.0.1:9876/icon-512.png
 
-      - name: Create twa-manifest.json and generate project
+      - name: Create twa-manifest.json and generate Android project
         run: |
           mkdir -p fitpro-twa
           cat > fitpro-twa/twa-manifest.json << 'MANIFEST_EOF'
@@ -132,14 +133,27 @@ jobs:
           }
           MANIFEST_EOF
           cd fitpro-twa && printf '1.0.0\n1\n\n\n\n\n' | bubblewrap update --skipPwaValidation
+          echo "=== Project files generated ==="
+          ls -la
 
-      - name: Build APK
+      - name: Build signed APK with Gradle
         working-directory: fitpro-twa
-        run: printf 'fitpro123\nfitpro123\nfitpro123\nfitpro123\n' | bubblewrap build --skipPwaValidation
+        run: |
+          chmod +x gradlew
+          KEYSTORE_PATH="$(realpath ../fitpro-release-key.keystore)"
+          echo "Keystore: $KEYSTORE_PATH"
+          ls -la "$KEYSTORE_PATH"
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$KEYSTORE_PATH" \
+            -Pandroid.injected.signing.store.password=fitpro123 \
+            -Pandroid.injected.signing.key.alias=fitpro \
+            -Pandroid.injected.signing.key.password=fitpro123
+          echo "=== Build output ==="
+          find . -name "*.apk" 2>/dev/null
 
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
           name: fitpro-signed-apk
-          path: fitpro-twa/app-release-signed.apk
+          path: fitpro-twa/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: warn
