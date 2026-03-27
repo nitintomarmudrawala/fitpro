@@ -96,7 +96,7 @@ jobs:
             "hermeticMode": false
           }
           MANIFEST_EOF
-          cd fitpro-twa && bubblewrap update
+          cd fitpro-twa && printf '1.0.0\n1\n\n\n\n\n' | bubblewrap update
 
       - name: Build APK
         working-directory: fitpro-twa
