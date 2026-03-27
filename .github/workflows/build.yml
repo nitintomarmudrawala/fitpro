@@ -87,15 +87,14 @@ jobs:
             "alphaDependencies": {
               "enabled": false
             },
-            "enableSiteSettingsShortcut": true,
             "hermeticMode": false
           }
           MANIFEST_EOF
-          cd fitpro-twa && bubblewrap update
+          cd fitpro-twa && echo "n" | bubblewrap update
 
       - name: Build APK
         working-directory: fitpro-twa
-        run: printf 'fitpro123\nfitpro123\n' | bubblewrap build --skipPwaValidation
+        run: printf 'n\nfitpro123\nfitpro123\n' | bubblewrap build --skipPwaValidation
 
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
