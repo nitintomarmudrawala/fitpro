@@ -94,7 +94,8 @@ jobs:
             "shortcuts": [],
             "isChromeOSOnly": false,
             "isMetaQuest": false,
-            "fullScopeUrl": "https://nitintomarmudrawala.github.io/fitpro/"
+            "fullScopeUrl": "https://nitintomarmudrawala.github.io/fitpro/",
+            "splashScreenFadeOutDuration": 300
           }
           MANIFEST_EOF
           cd fitpro-twa && printf '1.0.0\n1\n\n\n\n\n' | bubblewrap update
