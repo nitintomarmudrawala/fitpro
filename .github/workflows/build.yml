@@ -1,0 +1,115 @@
+name: Build FitPro TWA APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Install Android build tools
+        run: |
+          yes | sdkmanager --install "build-tools;33.0.2" "platforms;android-33" --sdk_root=$ANDROID_SDK_ROOT || true
+
+      - name: Create Bubblewrap project
+        run: |
+          mkdir -p fitpro-twa && cd fitpro-twa
+          bubblewrap init --manifest https://nitintomarmudrawala.github.io/fitpro/manifest.json --directory .
+
+      - name: Configure twa-manifest.json
+        run: |
+          cd fitpro-twa
+          cat > twa-manifest.json << 'EOF'
+          {
+            "packageId": "com.nitin.fitpro",
+            "host": "nitintomarmudrawala.github.io",
+            "name": "FitPro - Personal Trainer",
+            "launcherName": "FitPro",
+            "display": "standalone",
+            "themeColor": "#FF6B2B",
+            "navigationColor": "#07070F",
+            "backgroundColor": "#07070F",
+            "startUrl": "/fitpro/",
+            "iconUrl": "https://nitintomarmudrawala.github.io/fitpro/icon.png",
+            "maskableIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icon.png",
+            "appVersion": "2",
+            "appVersionName": "2.0.0",
+            "signingKey": {
+              "path": "../fitpro-release-key.keystore",
+              "alias": "fitpro"
+            },
+            "minSdkVersion": 19,
+            "targetSdkVersion": 33,
+            "orientation": "portrait",
+            "enableNotifications": false,
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "https://nitintomarmudrawala.github.io/fitpro/manifest.json",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": {"enabled": false},
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "https://nitintomarmudrawala.github.io/fitpro/",
+            "locationDelegationEnabled": true,
+            "generateGradle": true
+          }
+          EOF
+
+      - name: Generate keystore
+        run: |
+          cd fitpro-twa
+          keytool -genkeypair -v \
+            -keystore ../fitpro-release-key.keystore \
+            -alias fitpro \
+            -keyalg RSA -keysize 2048 \
+            -validity 10000 \
+            -storepass fitpro123 \
+            -keypass fitpro123 \
+            -dname "CN=FitPro, OU=Dev, O=Mudrawala, L=India, S=India, C=IN"
+
+      - name: Build APK
+        run: |
+          cd fitpro-twa
+          bubblewrap build --skipPwaValidation
+        env:
+          STORE_PASSWORD: fitpro123
+          KEY_PASSWORD: fitpro123
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fitpro-release-apk
+          path: fitpro-twa/app-release-signed.apk
+          if-no-files-found: warn
+
+      - name: Upload unsigned APK too
+        uses: actions/upload-artifact@v3
+        with:
+          name: fitpro-release-unsigned
+          path: fitpro-twa/app-release-unsigned.apk
+          if-no-files-found: warn
