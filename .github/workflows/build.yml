@@ -9,9 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      JAVA_HOME: ${{ env.JAVA_HOME }}
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -34,8 +31,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install Android build tools
-        run: |
-          sdkmanager "build-tools;33.0.2" "platforms;android-33" || true
+        run: sdkmanager "build-tools;33.0.2" "platforms;android-33" || true
 
       - name: Generate keystore
         run: |
@@ -48,21 +44,17 @@ jobs:
             -keypass fitpro123 \
             -dname "CN=FitPro, OU=Dev, O=Mudrawala, L=India, S=India, C=IN"
 
-      - name: Init Bubblewrap project
+      - name: Create twa-manifest.json and generate project
         run: |
-          mkdir -p fitpro-twa && cd fitpro-twa
-          # Answer 'n' to JDK install prompt (we have JDK 17 already)
-          echo "n" | bubblewrap init --manifest https://nitintomarmudrawala.github.io/fitpro/manifest.json --directory . || true
-
-      - name: Override twa-manifest.json
-        run: |
-          cat > fitpro-twa/twa-manifest.json << 'EOF'
+          mkdir -p fitpro-twa
+          cat > fitpro-twa/twa-manifest.json << 'MANIFEST_EOF'
           {
             "packageId": "com.nitin.fitpro",
             "host": "nitintomarmudrawala.github.io",
             "name": "FitPro - Personal Trainer",
             "launcherName": "FitPro",
             "display": "standalone",
+            "orientation": "portrait",
             "themeColor": "#FF6B2B",
             "navigationColor": "#07070F",
             "navigationColorDark": "#07070F",
@@ -71,53 +63,43 @@ jobs:
             "backgroundColor": "#07070F",
             "enableNotifications": false,
             "startUrl": "/fitpro/",
-            "iconUrl": "https://nitintomarmudrawala.github.io/fitpro/icon.png",
-            "maskableIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icon.png",
-            "monochromeIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icon.png",
-            "shortcuts": [],
-            "appVersion": "2",
-            "appVersionName": "2.0.0",
+            "iconUrl": "https://nitintomarmudrawala.github.io/fitpro/icons/icon-512.png",
+            "maskableIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icons/icon-512.png",
+            "monochromeIconUrl": "https://nitintomarmudrawala.github.io/fitpro/icons/icon-512.png",
+            "appVersion": "1.0.0",
+            "appVersionCode": 1,
             "signingKey": {
               "path": "../fitpro-release-key.keystore",
               "alias": "fitpro"
             },
-            "additionalTrustedOrigins": [],
-            "minSdkVersion": 19,
-            "targetSdkVersion": 33,
-            "orientation": "portrait",
-            "generatorApp": "bubblewrap-cli",
-            "webManifestUrl": "https://nitintomarmudrawala.github.io/fitpro/manifest.json",
-            "fallbackType": "customtabs",
-            "features": {},
-            "alphaDependencies": {"enabled": false},
+            "splashScreenFadeOutDuration": 300,
             "enableSiteSettingsShortcut": true,
             "isChromeOSOnly": false,
             "isMetaQuest": false,
             "fullScopeUrl": "https://nitintomarmudrawala.github.io/fitpro/",
-            "locationDelegationEnabled": true,
-            "generateGradle": true
+            "minSdkVersion": 19,
+            "targetSdkVersion": 33,
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "https://nitintomarmudrawala.github.io/fitpro/manifest.json",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": {
+              "enabled": false
+            },
+            "enableSiteSettingsShortcut": true,
+            "hermeticMode": false
           }
-          EOF
+          MANIFEST_EOF
+          cd fitpro-twa && bubblewrap update
 
       - name: Build APK
         working-directory: fitpro-twa
-        run: |
-          # Answer 'n' to JDK prompt, then provide keystore passwords
-          printf 'n\nfitpro123\nfitpro123\n' | bubblewrap build --skipPwaValidation
-
-      - name: Find APK files
-        run: find . -name "*.apk" 2>/dev/null || echo "No APK found"
+        run: printf 'fitpro123\nfitpro123\n' | bubblewrap build --skipPwaValidation
 
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
           name: fitpro-signed-apk
           path: fitpro-twa/app-release-signed.apk
-          if-no-files-found: warn
-
-      - name: Upload unsigned APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: fitpro-unsigned-apk
-          path: fitpro-twa/app-release-unsigned.apk
           if-no-files-found: warn
